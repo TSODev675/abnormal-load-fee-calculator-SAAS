@@ -1,0 +1,236 @@
+{% extends 'dashboard/base_dashboard.html' %}
+
+{% load static %}
+{% block content %}
+<!-- Carousel Form with Alpine.js -->
+<div x-data="{ step: 1 }" class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
+
+    <!-- Step 1: Axle/Load Information -->
+    <div x-show="step === 1" x-transition:enter="transition ease-out duration-500"
+        x-transition:leave="transition ease-in duration-500">
+        <h1 class="text-2xl font-bold mb-6">Axle/Load Information</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="axle_unit" class="block text-gray-700">Axle Unit</label>
+                <select id="axle_unit" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select Axle Unit</option>
+                    <option value="1">TF</option>
+                    <option value="2">TR</option>
+                    <option value="3">DO</option>
+                    <option value="4">ST</option>
+                    <option value="5">C1</option>
+                    <option value="6">C2</option>
+                </select>
+            </div>
+            <div>
+                <label for="allowable_mass" class="block text-gray-700">Allowable Mass (kg)</label>
+                <input type="number" id="allowable_mass" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="actual_mass" class="block text-gray-700">Actual Mass (kg)</label>
+                <input type="number" id="actual_mass" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="no_of_axles" class="block text-gray-700">No of Axles</label>
+                <input type="number" id="no_of_axles" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="axle_type" class="block text-gray-700">Axle Type</label>
+                <select id="axle_type" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select Axle Unit</option>
+                    <option value="1">Single</option>
+                    <option value="2">Dual</option>
+                    <option value="3">4 Single</option>
+                    <option value="4">4 Dual</option>
+                    <option value="5">6 Dual</option>
+                    <option value="6">8 DUal</option>
+                </select>
+            </div>
+            <div>
+                <label for="w_spc_a" class="block text-gray-700">W-Spc A(mm)</label>
+                <input type="number" id="w_spc_a" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="w_spc_b" class="block text-gray-700">W-Spc B(mm)</label>
+                <input type="number" id="w_spc_b" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="type_pressure" class="block text-gray-700">Tyre Pressure(kPa)</label>
+                <input type="number" id="type_pressure" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="press_used" class="block text-gray-700">Pressure Used(kPa)</label>
+                <input type="number" id="no_of_axles" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="eswm" class="block text-gray-700">ESWM</label>
+                <input type="number" id="eswm" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="damage" class="block text-gray-700">Damage</label>
+                <input type="number" id="damage" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+
+        </div>
+
+        <!-- Next Button -->
+        <div class="mt-6 flex justify-end">
+            <button @click="step = 2" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Additional Information -->
+    <div x-show="step === 2" x-transition:enter="transition ease-out duration-500"
+        x-transition:leave="transition ease-in duration-500">
+        <h1 class="text-2xl font-bold mb-6">Additional Information</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Actual Mass (kg)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Wheel Track (mm)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="axle_type" class="block text-gray-700">AV No.</label>
+                <select id="axle_type" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select AV No.</option>
+                    <option value="1">Single</option>
+                    <option value="2">Dual</option>
+                    <option value="3">4 Single</option>
+                    <option value="4">4 Dual</option>
+                    <option value="5">6 Dual</option>
+                    <option value="6">8 DUal</option>
+                </select>
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Laden Length (mm)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Laden width (mm)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Laden Height(mm)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Distance (km)</label>
+                <input type="number" id="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="distance_escorted" class="block text-gray-700">Distance Escorted (km)</label>
+                <input type="number" id="distance_escorted" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="no_of_escorts" class="block text-gray-700">No. of Traffic Officer Escorts</label>
+                <input type="number" id="no_of_escorts" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="rural_speed" class="block text-gray-700">Rural Speed (km/h)</label>
+                <input type="number" id="rural_speed" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button @click="step = 1" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+                Previous
+            </button>
+            <button @click="step = 3" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Additional Services -->
+    <div x-show="step === 3" x-transition:enter="transition ease-out duration-500"
+        x-transition:leave="transition ease-in duration-500">
+        <h1 class="text-2xl font-bold mb-6">Additional Services</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="engineer_fee" class="w-5 h-5">
+                <label for="engineer_fee" class="text-gray-700">Charge Engineer's Fee</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="weekend_travel" class="w-5 h-5">
+                <label for="weekend_travel" class="text-gray-700">Weekend Travel</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="mobile_crane" class="w-5 h-5">
+                <label for="mobile_crane" class="text-gray-700">Mobile Crane</label>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button @click="step = 2" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+                Previous
+            </button>
+            <button @click="step = 4" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Calculated Fee -->
+    <div x-show="step === 4" x-transition:enter="transition ease-out duration-500"
+        x-transition:leave="transition ease-in duration-500">
+        <h1 class="text-2xl font-bold mb-6">Calculated Fee</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label for="province" class="block text-gray-700">Province</label>
+                <select id="province" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="FS">FS</option>
+                    <option value="GP">GP</option>
+                    <option value="KN">MP</option>
+                    <option value="KN">EC</option>
+                    <option value="KN">RA</option>
+                    <option value="KN">NC</option>
+                    <option value="KN">LP</option>
+                    <option value="KN">KN</option>
+                    <option value="KN">NW</option>
+                </select>
+            </div>
+
+            <div class="bg-yellow-100 p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold">Fee Breakdown</h3>
+                <ul>
+                    <li>Admin Fee: <span>R300,00</span></li>
+                    <li>Mass Fee: <span>cent/km</span></li>
+                    <li>Width Fee: <span>cent/km</span></li>
+                    <li>Length Fee: <span>cent/km</span></li>
+                    <li>Escort Fee: <span>R0,00</span></li>
+                    <li>Fax Fee: <span>None</span></li>
+                    <li>Extra Fee: <span>None</span></li>
+                </ul>
+                <div class="mt-4">
+                    <strong>Total Fee: <span class="text-xl">R300,00</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button @click="step = 3" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+                Previous
+            </button>
+            <button class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                Submit
+            </button>
+        </div>
+    </div>
+
+</div>
+<script src="{% static 'js/cdn.min.js' %}"></script>
+
+
+
+{% endblock %}
+<!--
+
+<!-- <script src="//unpkg.com/alpinejs" defer></script> -->

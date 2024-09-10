@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <title>{% block title %}Abnormal Load Permit System{% endblock %}</title>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 text-white px-4 py-3">
+        <div class="flex justify-between items-center">
+            <div>
+                <a href="/" class="text-2xl font-bold">Abnormal Load</a>
+            </div>
+            <!-- User Login and Icon -->
+            <div class="flex items-center space-x-4">
+                <span>Welcome, Thendo Malima</span>
+                <a href="/profile">
+                    <i class="fas fa-user-circle text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="flex">
+        <div class="bg-gray-800 text-white w-64 h-screen fixed">
+         
+            <ul class="mt-6">
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/dashboard" class="flex items-center">
+                        <i class="fas fa-tachometer-alt mr-2"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/calculator" class="flex items-center">
+                        <i class="fas fa-calculator mr-2"></i>
+                        <span>Fee Calculator</span>
+                    </a>
+                </li>
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/profile" class="flex items-center">
+                        <i class="fas fa-user mr-2"></i>
+                        <span>Profile</span>
+                    </a>
+                </li>
+                <!-- AV Number, Account, Constants and Fees -->
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/av-number" class="flex items-center">
+                        <i class="fas fa-list-alt mr-2"></i>
+                        <span>AV Number</span>
+                    </a>
+                </li>
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/account" class="flex items-center">
+                        <i class="fas fa-credit-card mr-2"></i>
+                        <span>Account</span>
+                    </a>
+                </li>
+                <li class="px-6 py-2 hover:bg-gray-700">
+                    <a href="/constants" class="flex items-center">
+                        <i class="fas fa-cogs mr-2"></i>
+                        <span>Constants & Fees</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="ml-64 w-full">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

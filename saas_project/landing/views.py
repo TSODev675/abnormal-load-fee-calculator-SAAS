@@ -72,3 +72,7 @@ def index(request):
         ],
     }
     return render(request, 'landing/index.html', context)
+
+
+
+def calculator_view(request): return render(request, 'dashboard/calculator.html')

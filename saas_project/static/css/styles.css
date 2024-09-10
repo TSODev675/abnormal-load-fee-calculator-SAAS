@@ -1,0 +1,19 @@
+body {
+    font-family: 'Helvetica', 'Arial', sans-serif;
+}
+
+.bg-blue-600 {
+    background-color: #1D4ED8;
+}
+
+.text-blue-600 {
+    color: #1D4ED8;
+}
+
+.rounded-full {
+    border-radius: 9999px;
+}
+
+.rounded-lg {
+    border-radius: 0.5rem;
+}

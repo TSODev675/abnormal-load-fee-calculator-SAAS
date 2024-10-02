@@ -20,7 +20,7 @@
             <!-- User Login and Icon -->
             <div class="flex items-center space-x-4">
                 <span>Welcome, Thendo Malima</span>
-                <a href="/profile">
+                <a href="{% url 'profile' %}">
                     <i class="fas fa-user-circle text-2xl"></i>
                 </a>
             </div>
@@ -30,10 +30,10 @@
     <!-- Sidebar -->
     <div class="flex">
         <div class="bg-gray-800 text-white w-64 h-screen fixed">
-         
+            <div class="p-6 text-2xl font-bold">Abnormal Load</div>
             <ul class="mt-6">
                 <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/dashboard" class="flex items-center">
+                    <a href="{% url 'dashboard' %}" class="flex items-center">
                         <i class="fas fa-tachometer-alt mr-2"></i>
                         <span>Dashboard</span>
                     </a>
@@ -45,12 +45,11 @@
                     </a>
                 </li>
                 <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/profile" class="flex items-center">
+                    <a href="{% url 'profile' %}" class="flex items-center">
                         <i class="fas fa-user mr-2"></i>
                         <span>Profile</span>
                     </a>
                 </li>
-                <!-- AV Number, Account, Constants and Fees -->
                 <li class="px-6 py-2 hover:bg-gray-700">
                     <a href="/av-number" class="flex items-center">
                         <i class="fas fa-list-alt mr-2"></i>
@@ -72,12 +71,15 @@
             </ul>
         </div>
 
-        <!-- Main content -->
-        <div class="ml-64 w-full">
-            {% block content %}{% endblock %}
+        <!-- Main content area -->
+        <div class="ml-64 w-full p-6">
+            {% block content %}
+            <!-- Page-specific content will go here -->
+            {% endblock %}
         </div>
     </div>
 
     <script src="{% static 'js/main.js' %}"></script>
+    
 </body>
 </html>

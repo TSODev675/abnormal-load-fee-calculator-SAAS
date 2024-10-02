@@ -1,0 +1,88 @@
+<!-- services/templates/services/weather_integration.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Weather Integration{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Weather Integration Service</h1>
+    <p class="text-lg mb-6 text-center text-gray-600">Select a country and province to get live weather updates.</p>
+
+    <!-- Weather Form Container -->
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+        <form action="{% url 'weather-integration' %}" method="GET" id="weather-form" class="space-y-6">
+            <div>
+                <label class="font-semibold mb-2 block text-gray-700">Select Country:</label>
+                <div class="flex justify-around">
+                    {% for country in countries %}
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="radio" name="country" value="{{ country }}" class="form-radio h-5 w-5 text-blue-600"
+                               onchange="onCountryChange(this)" {% if selected_country == country %}checked{% elif not selected_country and country == 'South Africa' %}checked{% endif %}>
+                        <span class="ml-2 text-gray-700 text-lg">{{ country }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Province Selection -->
+            {% if selected_country %}
+            <div id="province-container" class="mt-4">
+                <label class="font-semibold mb-2 block text-gray-700">Select Province:</label>
+                <select name="province" id="province-select" class="w-full border border-gray-300 rounded-lg p-3 text-lg">
+                    <option value="">Select a province</option>
+                    {% for province in provinces %}
+                    <option value="{{ province }}" {% if selected_province == province %}selected{% elif not selected_province and province == 'Gauteng' %}selected{% endif %}>
+                        {{ province }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
+
+            <button type="button" onclick="submitWeatherForm()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-200">Get Weather</button>
+        </form>
+    </div>
+
+    <!-- Weather Information Display -->
+    <div id="weather-info" class="{% if not weather_info %}hidden{% endif %} mt-12 max-w-4xl mx-auto bg-gray-100 p-8 rounded-lg shadow-lg transition-opacity duration-500 ease-in-out">
+        <h2 class="text-5xl font-bold text-center text-gray-800">{{ selected_province }}</h2>
+        <!-- Live Temperature Display -->
+        <p class="text-5xl font-bold text-center text-blue-600 mt-2">{{ weather_info.daily.temperature_2m_max|first }}°C</p>
+        <p class="text-center text-2xl text-gray-600 mt-2">Mostly Sunny</p>
+        <p class="text-center text-gray-600 mt-2">Sunny conditions will continue all day. Wind gusts are up to 24 km/h.</p>
+
+        <!-- 10-Day Weather Forecast -->
+        <h3 class="text-3xl font-bold text-gray-800 mt-12 mb-6">10-Day Forecast</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            {% for day, max_temp, min_temp, precip in daily_weather_data %}
+            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
+                <p class="text-xl font-semibold">{{ day }}</p>
+                <i class="fas fa-cloud-sun-rain text-4xl text-blue-500 mb-4"></i>
+                <p class="text-2xl font-bold">Max: {{ max_temp }}°C</p>
+                <p class="text-2xl font-bold">Min: {{ min_temp }}°C</p>
+                <p class="text-sm text-gray-600">Precipitation: {{ precip }} mm</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function onCountryChange(element) {
+        document.getElementById('weather-form').submit();
+    }
+
+    function submitWeatherForm() {
+        const form = document.getElementById('weather-form');
+        const country = form.elements['country'].value;
+        const province = form.elements['province'].value;
+
+        if (country && province) {
+            form.submit();
+        } else {
+            alert('Please select both country and province.');
+        }
+    }
+</script>
+{% endblock %}

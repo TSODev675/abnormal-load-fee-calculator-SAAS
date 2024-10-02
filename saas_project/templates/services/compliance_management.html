@@ -1,0 +1,23 @@
+<!-- templates/services/compliance_management.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Compliance Management{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Compliance Management</h1>
+    <p class="text-lg mb-6 text-center text-gray-600">
+        Stay up-to-date with local and international transport regulations.
+    </p>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-semibold mb-4">Compliance Checklist</h2>
+        <ul class="list-disc pl-5">
+            <li>Ensure all permits are up-to-date.</li>
+            <li>Adhere to load size and weight restrictions.</li>
+            <li>Comply with road safety and traffic regulations.</li>
+            <li>Maintain accurate records for auditing purposes.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

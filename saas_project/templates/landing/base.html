@@ -11,10 +11,11 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
-    <header class="bg-white shadow-md">
+    <!-- Header Section with Responsive Navbar -->
+    <header class="bg-white shadow-md fixed w-full z-50 top-0">
         <nav class="container mx-auto px-6 py-3">
             <div class="flex justify-between items-center">
-                <div class="text-2xl font-bold text-gray-800">AbnormalLoad</div>
+                <div class="text-2xl font-bold text-gray-800">Abnormal Loads</div>
                 <div class="hidden md:flex items-center space-x-8">
                     <a href="#features" class="text-gray-600 hover:text-blue-500">Features</a>
                     <a href="#pricing" class="text-gray-600 hover:text-blue-500">Pricing</a>
@@ -22,14 +23,26 @@
                     <a href="#contact" class="text-gray-600 hover:text-blue-500">Contact</a>
                     <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Sign Up</a>
                 </div>
+                <!-- Hamburger Menu Icon for Mobile View -->
                 <div class="md:hidden">
-                    <button class="text-gray-600 focus:outline-none">
+                    <button id="menu-toggle" class="text-gray-600 focus:outline-none">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden mt-4">
+                <a href="#features" class="block py-2 px-4 text-gray-600 hover:text-blue-500">Features</a>
+                <a href="#pricing" class="block py-2 px-4 text-gray-600 hover:text-blue-500">Pricing</a>
+                <a href="#testimonials" class="block py-2 px-4 text-gray-600 hover:text-blue-500">Testimonials</a>
+                <a href="#contact" class="block py-2 px-4 text-gray-600 hover:text-blue-500">Contact</a>
+                <a href="#" class="block py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600">Sign Up</a>
+            </div>
         </nav>
     </header>
+
+    <!-- Add padding to prevent content from being hidden under fixed header -->
+    <div class="mt-20"></div>
 
     <main>
         {% block content %}{% endblock %}
@@ -38,34 +51,7 @@
     <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6">
             <div class="flex flex-wrap justify-between">
-                <div class="w-full md:w-1/4 mb-6 md:mb-0">
-                    <h3 class="text-xl font-bold mb-2">AbnormalLoad</h3>
-                    <p class="text-gray-400">Simplifying abnormal load transport management.</p>
-                </div>
-                <div class="w-full md:w-1/4 mb-6 md:mb-0">
-                    <h4 class="text-lg font-semibold mb-2">Quick Links</h4>
-                    <ul>
-                        <li><a href="#" class="text-gray-400 hover:text-white">Home</a></li>
-                        <li><a href="#features" class="text-gray-400 hover:text-white">Features</a></li>
-                        <li><a href="#pricing" class="text-gray-400 hover:text-white">Pricing</a></li>
-                        <li><a href="#contact" class="text-gray-400 hover:text-white">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="w-full md:w-1/4 mb-6 md:mb-0">
-                    <h4 class="text-lg font-semibold mb-2">Follow Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
-                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-                <div class="w-full md:w-1/4">
-                    <h4 class="text-lg font-semibold mb-2">Newsletter</h4>
-                    <form>
-                        <input type="email" placeholder="Enter your email" class="w-full px-4 py-2 rounded-md bg-gray-700 text-white mb-2">
-                        <button type="submit" class="w-full bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">Subscribe</button>
-                    </form>
-                </div>
+                <!-- Footer Content Here -->
             </div>
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
                 <p>&copy; 2024 AbnormalLoad. All rights reserved.</p>
@@ -74,5 +60,12 @@
     </footer>
 
     <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // JavaScript for toggling mobile menu
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
 </body>
 </html>

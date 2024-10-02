@@ -1,18 +1,32 @@
 {% extends 'dashboard/base_dashboard.html' %}
-
 {% load static %}
 {% block content %}
 <!-- Carousel Form with Alpine.js -->
-<div x-data="{ step: 1 }" class="max-w-x6l mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
+<div x-data="{ step: 1 }" class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md mt-6">
 
-    <!-- Step Indicator -->
-    <div class="mb-6">
+    <!-- Step Indicator and Progress Bar -->
+    <div class="mb-6 text-center">
         <p class="text-lg font-bold">Step <span x-text="step"></span> of 4</p>
+        <!-- Step Progress Bar -->
+        <div class="relative pt-1">
+            <div class="flex mb-2 items-center justify-between">
+                <div>
+                    <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-blue-600 bg-blue-200">
+                        Step Progress
+                    </span>
+                </div>
+            </div>
+            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                <div :style="`width: ${(step / 4) * 100}%`" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all duration-500 ease-in-out"></div>
+            </div>
+        </div>
     </div>
 
     <!-- Step 1: Axle/Load Information -->
-    <div x-show="step === 1" x-transition:enter="transition ease-out duration-500"
-        x-transition:leave="transition ease-in duration-500">
+    <div x-show="step === 1" x-transition:enter="transition transform ease-out duration-700"
+        x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition transform ease-in duration-700"
+        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
         <h1 class="text-2xl font-bold mb-6">Step 1: Axle/Load Information</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -52,19 +66,19 @@
                 </select>
             </div>
             <div>
-                <label for="w_spc_a" class="block text-gray-700">W-Spc A(mm)</label>
+                <label for="w_spc_a" class="block text-gray-700">W-Spc A (mm)</label>
                 <input type="number" id="w_spc_a" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
-                <label for="w_spc_b" class="block text-gray-700">W-Spc B(mm)</label>
+                <label for="w_spc_b" class="block text-gray-700">W-Spc B (mm)</label>
                 <input type="number" id="w_spc_b" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
-                <label for="type_pressure" class="block text-gray-700">Tyre Pressure(kPa)</label>
+                <label for="type_pressure" class="block text-gray-700">Tyre Pressure (kPa)</label>
                 <input type="number" id="type_pressure" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
-                <label for="press_used" class="block text-gray-700">Pressure Used(kPa)</label>
+                <label for="press_used" class="block text-gray-700">Pressure Used (kPa)</label>
                 <input type="number" id="press_used" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
@@ -79,15 +93,17 @@
 
         <!-- Next Button -->
         <div class="mt-6 flex justify-end">
-            <button @click="step = 2" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+            <button @click="step = 2" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Next
             </button>
         </div>
     </div>
 
     <!-- Step 2: Additional Information -->
-    <div x-show="step === 2" x-transition:enter="transition ease-out duration-500"
-        x-transition:leave="transition ease-in duration-500">
+    <div x-show="step === 2" x-transition:enter="transition transform ease-out duration-700"
+        x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition transform ease-in duration-700"
+        x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-full opacity-0">
         <h1 class="text-2xl font-bold mb-6">Step 2: Additional Information</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -104,10 +120,6 @@
                     <option>Select AV No.</option>
                     <option value="1">Single</option>
                     <option value="2">Dual</option>
-                    <option value="3">4 Single</option>
-                    <option value="4">4 Dual</option>
-                    <option value="5">6 Dual</option>
-                    <option value="6">8 Dual</option>
                 </select>
             </div>
             <div>
@@ -119,7 +131,7 @@
                 <input type="number" id="laden_width" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
-                <label for="laden_height" class="block text-gray-700">Total Laden Height(mm)</label>
+                <label for="laden_height" class="block text-gray-700">Total Laden Height (mm)</label>
                 <input type="number" id="laden_height" class="w-full p-2 border border-gray-300 rounded-md">
             </div>
             <div>
@@ -142,18 +154,20 @@
 
         <!-- Navigation Buttons -->
         <div class="mt-6 flex justify-between">
-            <button @click="step = 1" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+            <button @click="step = 1" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Previous
             </button>
-            <button @click="step = 3" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+            <button @click="step = 3" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Next
             </button>
         </div>
     </div>
 
     <!-- Step 3: Additional Services -->
-    <div x-show="step === 3" x-transition:enter="transition ease-out duration-500"
-        x-transition:leave="transition ease-in duration-500">
+    <div x-show="step === 3" x-transition:enter="transition transform ease-out duration-700"
+        x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition transform ease-in duration-700"
+        x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-full opacity-0">
         <h1 class="text-2xl font-bold mb-6">Step 3: Additional Services</h1>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="flex items-center space-x-2">
@@ -172,18 +186,20 @@
 
         <!-- Navigation Buttons -->
         <div class="mt-6 flex justify-between">
-            <button @click="step = 2" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+            <button @click="step = 2" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Previous
             </button>
-            <button @click="step = 4" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">
+            <button @click="step = 4" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Next
             </button>
         </div>
     </div>
 
     <!-- Step 4: Calculated Fee -->
-    <div x-show="step === 4" x-transition:enter="transition ease-out duration-500"
-        x-transition:leave="transition ease-in duration-500">
+    <div x-show="step === 4" x-transition:enter="transition transform ease-out duration-700"
+        x-transition:enter-start="translate-x-full opacity-0" x-transition:enter-end="translate-x-0 opacity-100"
+        x-transition:leave="transition transform ease-in duration-700"
+        x-transition:leave-start="translate-x-0 opacity-100" x-transition:leave-end="translate-x-full opacity-0">
         <h1 class="text-2xl font-bold mb-6">Step 4: Calculated Fee</h1>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             <div>
@@ -220,16 +236,17 @@
 
         <!-- Navigation Buttons -->
         <div class="mt-6 flex justify-between">
-            <button @click="step = 3" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600">
+            <button @click="step = 3" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Previous
             </button>
-            <button class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+            <button class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Submit
             </button>
         </div>
     </div>
 
 </div>
-<script src="{% static 'js/cdn.min.js' %}"></script>
 
+<!-- Load Alpine.js from a CDN or your own static file -->
+<script src="{% static 'js/cdn.min.js' %}"></script>
 {% endblock %}

@@ -1,89 +1,124 @@
 {% extends 'landing/base.html' %}
+{% load static %}
+
+<!-- Reference to external CSS file -->
+<link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
 
 {% block content %}
-    <!-- Hero Section -->
-    <section class="bg-blue-600 text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h1 class="text-5xl font-bold mb-4">Revolutionize Your Abnormal Load Transport</h1>
-            <p class="text-xl mb-8">Streamline operations, ensure compliance, and optimize routes with our cutting-edge platform.</p>
-            <a href="#" class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-blue-700 hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Get Started</a>
+<!-- Smooth Scrolling Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('a[href^="#"]');
+        for (const link of links) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        }
+    });
+</script>
 
+<!-- Hero Section -->
+<section id="hero" class="bg-blue-600 text-white py-20 transition-opacity duration-500 ease-in-out">
+    <div class="container mx-auto px-6 text-center">
+        <h1 class="text-5xl font-bold mb-4 animate-fade-in">Revolutionize Your Abnormal Load Transport</h1>
+        <p class="text-xl mb-8 animate-fade-in">Streamline operations, ensure compliance, and optimize routes with our
+            cutting-edge platform.</p>
+        <a href="{% url 'dashboard' %}"
+            class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-blue-700 hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105">Get
+            Started</a>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section id="features" class="py-20 transition-opacity duration-500 ease-in-out">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-12">Features</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
+            {% for feature in features %}
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                <i class="{{ feature.icon }} text-blue-600 text-4xl mb-4"></i>
+                <h3 class="text-2xl font-semibold mb-2">{{ feature.title }}</h3>
+                <p class="text-gray-600">{{ feature.description }}</p>
+            </div>
+            {% endfor %}
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Features Section -->
-    <section id="features" class="py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-12">Features</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                {% for feature in features %}
-                    <div class="bg-white p-6 rounded-lg shadow-lg">
-                        <i class="{{ feature.icon }} text-blue-600 text-4xl mb-4"></i>
-                        <h3 class="text-2xl font-semibold mb-2">{{ feature.title }}</h3>
-                        <p class="text-gray-600">{{ feature.description }}</p>
-                    </div>
-                {% endfor %}
+<!-- Pricing Section -->
+<section id="pricing" class="bg-gray-100 py-20 transition-opacity duration-500 ease-in-out">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-12">Pricing Plans</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
+            {% for plan in pricing_plans %}
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                <h3 class="text-2xl font-semibold mb-2">{{ plan.name }}</h3>
+                <p class="text-4xl font-bold text-blue-600 mb-4">R{{ plan.price }}/mo</p>
+                <ul class="mb-6">
+                    {% for feature in plan.features %}
+                    <li class="text-gray-600 mb-2">{{ feature }}</li>
+                    {% endfor %}
+                </ul>
+                <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Choose Plan</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="py-20 transition-opacity duration-500 ease-in-out">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-12">What Our Clients Say</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <!-- Testimonial 1 -->
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                <p class="text-gray-600 mb-4">"AbnormalLoad has made our transport operations so much easier! We now
+                    plan our routes efficiently while staying compliant with regulations."</p>
+                <h4 class="text-lg font-semibold">John Doe, Logistics Manager</h4>
+            </div>
+
+            <!-- Testimonial 2 -->
+            <div
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
+                <p class="text-gray-600 mb-4">"Real-time tracking and weather integration have been game changers for
+                    our business. Highly recommend!"</p>
+                <h4 class="text-lg font-semibold">Jane Smith, Fleet Supervisor</h4>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Pricing Section -->
-    <section id="pricing" class="bg-gray-100 py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-12">Pricing Plans</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-                {% for plan in pricing_plans %}
-                    <div class="bg-white p-6 rounded-lg shadow-lg">
-                        <h3 class="text-2xl font-semibold mb-2">{{ plan.name }}</h3>
-                        <p class="text-4xl font-bold text-blue-600 mb-4">R{{ plan.price }}/mo</p>
-                        <ul class="mb-6">
-                            {% for feature in plan.features %}
-                                <li class="text-gray-600 mb-2">{{ feature }}</li>
-                            {% endfor %}
-                        </ul>
-                        <a href="#" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">Choose Plan</a>
-                    </div>
-                {% endfor %}
+<!-- Contact Section -->
+<section id="contact" class="bg-blue-600 text-white py-20 transition-opacity duration-500 ease-in-out">
+    <div class="container mx-auto px-6 text-center">
+        <h2 class="text-4xl font-bold mb-12">Get in Touch</h2>
+        <form class="max-w-lg mx-auto">
+            <div class="mb-4">
+                <input type="text"
+                    class="w-full px-4 py-2 rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Name">
             </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-12">What Our Clients Say</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-                <!-- Testimonial 1 -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <p class="text-gray-600 mb-4">"AbnormalLoad has made our transport operations so much easier! We now plan our routes efficiently while staying compliant with regulations."</p>
-                    <h4 class="text-lg font-semibold">John Doe, Logistics Manager</h4>
-                </div>
-
-                <!-- Testimonial 2 -->
-                <div class="bg-white p-6 rounded-lg shadow-lg">
-                    <p class="text-gray-600 mb-4">"Real-time tracking and weather integration have been game changers for our business. Highly recommend!"</p>
-                    <h4 class="text-lg font-semibold">Jane Smith, Fleet Supervisor</h4>
-                </div>
+            <div class="mb-4">
+                <input type="email"
+                    class="w-full px-4 py-2 rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500"
+                    placeholder="Email">
             </div>
-        </div>
-    </section>
+            <div class="mb-4">
+                <textarea class="w-full px-4 py-2 rounded-md bg-white text-gray-900 focus:ring-2 focus:ring-blue-500"
+                    rows="4" placeholder="Message"></textarea>
+            </div>
+            <button type="submit"
+                class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100 transform hover:scale-105 transition-transform duration-300 ease-in-out">Send
+                Message</button>
+        </form>
+    </div>
+</section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="bg-blue-600 text-white py-20">
-        <div class="container mx-auto px-6 text-center">
-            <h2 class="text-4xl font-bold mb-12">Get in Touch</h2>
-            <form class="max-w-lg mx-auto">
-                <div class="mb-4">
-                    <input type="text" class="w-full px-4 py-2 rounded-md bg-white text-gray-900" placeholder="Name">
-                </div>
-                <div class="mb-4">
-                    <input type="email" class="w-full px-4 py-2 rounded-md bg-white text-gray-900" placeholder="Email">
-                </div>
-                <div class="mb-4">
-                    <textarea class="w-full px-4 py-2 rounded-md bg-white text-gray-900" rows="4" placeholder="Message"></textarea>
-                </div>
-                <button type="submit" class="bg-white text-blue-600 px-6 py-3 rounded-full font-semibold hover:bg-gray-100">Send Message</button>
-            </form>
-        </div>
-    </section>
 {% endblock %}

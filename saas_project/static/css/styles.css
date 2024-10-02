@@ -3,11 +3,11 @@ body {
 }
 
 .bg-blue-600 {
-    background-color: #012D50;
+    background-color: #001f3f;
 }
 
 .text-blue-600 {
-    color: #012D50;
+    color: #001f3f;
 }
 
 .rounded-full {
@@ -16,4 +16,23 @@ body {
 
 .rounded-lg {
     border-radius: 0.5rem;
+}
+
+.hidden {
+    display: none;
+}
+
+#province-container select {
+    transition: all 0.3s ease-in-out;
+}
+
+#weather-info {
+    opacity: 0;
+}
+
+#weather-info.show {
+    opacity: 1;
+}
+#province-container {
+    display: block !important;  /* Ensure display is set to block */
 }

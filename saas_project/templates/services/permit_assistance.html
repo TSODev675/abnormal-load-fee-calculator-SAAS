@@ -1,0 +1,24 @@
+<!-- templates/services/permit_assistance.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Permit Assistance{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-6 py-8">
+    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Permit Assistance</h1>
+    <p class="text-lg mb-6 text-center text-gray-600">
+        Streamline the process of obtaining necessary permits for your transports.
+    </p>
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-2xl font-semibold mb-4">Permit Application Process</h2>
+        <p>Follow these steps to apply for a permit:</p>
+        <ol class="list-decimal pl-5 mt-4">
+            <li>Fill out the permit application form with the required details.</li>
+            <li>Attach necessary documents such as route maps and load specifications.</li>
+            <li>Submit the application and wait for approval.</li>
+            <li>Once approved, download your permit and keep it with you during transportation.</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}

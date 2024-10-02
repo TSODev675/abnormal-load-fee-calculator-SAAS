@@ -1,0 +1,24 @@
+<!-- landing/templates/landing/profile.html -->
+{% extends 'dashboard/base_dashboard.html' %}
+{% load static %} <!-- Add this line to load static files -->
+
+{% block title %}User Profile{% endblock %}
+
+{% block content %}
+<section class="bg-white py-20">
+    <div class="container mx-auto px-6">
+        <h1 class="text-5xl font-bold mb-4">User Profile</h1>
+        <div class="mt-6">
+            <p class="text-xl">Welcome to your profile page! Use this space to view and manage your account information.</p>
+            <!-- Example Profile Section -->
+            <div class="mt-8 flex items-center">
+                <img src="{% static 'images/Final_logo.png' %}" alt="Profile Logo" class="w-32 h-32 rounded-full"> <!-- Updated line -->
+                <div class="ml-6">
+                    <h2 class="text-3xl font-bold">John Doe</h2>
+                    <p class="text-gray-600">john.doe@example.com</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

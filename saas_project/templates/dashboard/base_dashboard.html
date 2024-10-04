@@ -1,16 +1,65 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <title>{% block title %}Abnormal Load Permit System{% endblock %}</title>
-</head>
-<body class="bg-gray-100">
+    <style>
+        /* Ensure that the body and html take the full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
 
+        /* Set height and scrolling behavior for the wrapper */
+        .flex-grow {
+            flex-grow: 1;
+            overflow: hidden; /* Prevent main body from scrolling */
+        }
+
+        /* Sidebar and Main Content Structure */
+        #wrapper {
+            display: flex;
+            height: calc(100vh - 64px); /* Full height minus the navbar height */
+            overflow: hidden;
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            width: 16rem; /* Expanded width */
+            height: calc(100vh - 64px); /* Full height minus the navbar height */
+            overflow-y: auto; /* Enable scrolling for sidebar */
+        }
+
+        /* Main content area styles */
+        #main-content {
+            flex-grow: 1;
+            height: calc(100vh - 64px); /* Adjust height for content */
+            overflow-y: auto; /* Enable vertical scrolling for content */
+            padding: 1rem;
+            margin-left: 16rem; /* Adjust based on the sidebar's width */
+        }
+
+        /* Sidebar toggle styles */
+        .w-16 {
+            width: 4rem !important;
+        }
+
+        .ml-16 {
+            margin-left: 4rem !important;
+        }
+
+        .ml-64 {
+            margin-left: 16rem !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Navbar -->
     <nav class="bg-gray-800 text-white px-4 py-3">
         <div class="flex justify-between items-center">
@@ -27,59 +76,107 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
-    <div class="flex">
-        <div class="bg-gray-800 text-white w-64 h-screen fixed">
-            <div class="p-6 text-2xl font-bold">Abnormal Load</div>
-            <ul class="mt-6">
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="{% url 'dashboard' %}" class="flex items-center">
-                        <i class="fas fa-tachometer-alt mr-2"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/calculator" class="flex items-center">
-                        <i class="fas fa-calculator mr-2"></i>
-                        <span>Fee Calculator</span>
-                    </a>
-                </li>
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="{% url 'profile' %}" class="flex items-center">
-                        <i class="fas fa-user mr-2"></i>
-                        <span>Profile</span>
-                    </a>
-                </li>
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/av-number" class="flex items-center">
-                        <i class="fas fa-list-alt mr-2"></i>
-                        <span>AV Number</span>
-                    </a>
-                </li>
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/account" class="flex items-center">
-                        <i class="fas fa-credit-card mr-2"></i>
-                        <span>Account</span>
-                    </a>
-                </li>
-                <li class="px-6 py-2 hover:bg-gray-700">
-                    <a href="/constants" class="flex items-center">
-                        <i class="fas fa-cogs mr-2"></i>
-                        <span>Constants & Fees</span>
-                    </a>
-                </li>
-            </ul>
+    <!-- Sidebar and Content Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <div id="sidebar" class="bg-gray-800 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
+            <!-- Sidebar Header with Toggle Button -->
+            <div>
+                <div class="flex justify-between items-center p-4">
+                    <span id="sidebar-title" class="text-2xl font-bold">Menu</span>
+                    <button id="sidebar-toggle" class="focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+                <!-- Sidebar Links -->
+                <ul class="mt-4 space-y-4 px-2">
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="{% url 'dashboard' %}" class="flex items-center space-x-4">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span class="sidebar-text">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="/calculator" class="flex items-center space-x-4">
+                            <i class="fas fa-calculator"></i>
+                            <span class="sidebar-text">Fee Calculator</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="{% url 'profile' %}" class="flex items-center space-x-4">
+                            <i class="fas fa-user"></i>
+                            <span class="sidebar-text">Profile</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="/av-number" class="flex items-center space-x-4">
+                            <i class="fas fa-list-alt"></i>
+                            <span class="sidebar-text">AV Number</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="/account" class="flex items-center space-x-4">
+                            <i class="fas fa-credit-card"></i>
+                            <span class="sidebar-text">Account</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="/constants" class="flex items-center space-x-4">
+                            <i class="fas fa-cogs"></i>
+                            <span class="sidebar-text">Constants & Fees</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Sidebar Logout Button (Stick to Bottom) -->
+            <div class="px-2 py-4">
+                <button class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="ml-2 sidebar-text">Logout</span>
+                </button>
+            </div>
         </div>
 
         <!-- Main content area -->
-        <div class="ml-64 w-full p-6">
+        <div id="main-content">
             {% block content %}
             <!-- Page-specific content will go here -->
             {% endblock %}
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-4 text-center w-full z-10">
+        <div class="flex justify-between items-center max-w-6xl mx-auto px-4">
+            <div class="text-sm">Abnormal Load System. All Rights Reserved.</div>
+            <div>
+                <img src="{% static 'images/Final_logo_white.png' %}" alt="CSIR Logo" class="h-8">
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sidebar Toggle Script -->
+    <script>
+        const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarTextElements = document.querySelectorAll('.sidebar-text');
+        const sidebarTitle = document.getElementById('sidebar-title');
+        const mainContent = document.getElementById('main-content');
+
+        sidebarToggleBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('w-16');
+            mainContent.classList.toggle('ml-16');
+            sidebar.classList.toggle('w-64');
+            mainContent.classList.toggle('ml-64');
+
+            sidebarTextElements.forEach(text => {
+                text.classList.toggle('hidden');
+            });
+            sidebarTitle.classList.toggle('hidden');
+        });
+    </script>
+
     <script src="{% static 'js/main.js' %}"></script>
-    
 </body>
 </html>

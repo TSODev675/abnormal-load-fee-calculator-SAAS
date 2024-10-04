@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import requests
+from django.http import JsonResponse
 
 # Coordinates for each province in South Africa and Namibia
 COUNTRY_PROVINCES_COORDINATES = {
@@ -102,7 +103,18 @@ def weather_integration_view(request):
             else:
                 weather_info = {'error': 'Could not retrieve weather data.'}
 
-    # Render the template with updated context
+    # If the request expects a JSON response, return JSON
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        return JsonResponse({
+            'countries': list(COUNTRY_PROVINCES_COORDINATES.keys()),
+            'selected_country': selected_country,
+            'provinces': list(provinces),
+            'selected_province': selected_province,
+            'weather_info': weather_info,
+            'daily_weather_data': daily_weather_data,
+        })
+    
+    # Otherwise, render the template normally
     return render(request, 'services/weather_integration.html', {
         'countries': COUNTRY_PROVINCES_COORDINATES.keys(),
         'selected_country': selected_country,
@@ -111,8 +123,6 @@ def weather_integration_view(request):
         'weather_info': weather_info,
         'daily_weather_data': daily_weather_data,  # Pass the daily weather data to the template
     })
-
-
 # View placeholders for each service
 def route_optimization_view(request):
     return render(request, 'services/route_optimization.html')

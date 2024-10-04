@@ -1,4 +1,4 @@
-<!-- services/templates/services/weather_integration.html -->
+<!-- templates/services/weather_integration.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
@@ -11,78 +11,137 @@
 
     <!-- Weather Form Container -->
     <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
-        <form action="{% url 'weather-integration' %}" method="GET" id="weather-form" class="space-y-6">
+        <form id="weather-form" class="space-y-6">
+            <!-- Country Selection -->
             <div>
                 <label class="font-semibold mb-2 block text-gray-700">Select Country:</label>
                 <div class="flex justify-around">
-                    {% for country in countries %}
                     <label class="inline-flex items-center cursor-pointer">
-                        <input type="radio" name="country" value="{{ country }}" class="form-radio h-5 w-5 text-blue-600"
-                               onchange="onCountryChange(this)" {% if selected_country == country %}checked{% elif not selected_country and country == 'South Africa' %}checked{% endif %}>
-                        <span class="ml-2 text-gray-700 text-lg">{{ country }}</span>
+                        <input type="radio" name="country" value="South Africa" class="form-radio h-5 w-5 text-blue-600" checked onchange="fetchProvinces(this)">
+                        <span class="ml-2 text-gray-700 text-lg">South Africa</span>
                     </label>
-                    {% endfor %}
+                    <label class="inline-flex items-center cursor-pointer">
+                        <input type="radio" name="country" value="Namibia" class="form-radio h-5 w-5 text-blue-600" onchange="fetchProvinces(this)">
+                        <span class="ml-2 text-gray-700 text-lg">Namibia</span>
+                    </label>
                 </div>
             </div>
 
             <!-- Province Selection -->
-            {% if selected_country %}
             <div id="province-container" class="mt-4">
                 <label class="font-semibold mb-2 block text-gray-700">Select Province:</label>
                 <select name="province" id="province-select" class="w-full border border-gray-300 rounded-lg p-3 text-lg">
                     <option value="">Select a province</option>
-                    {% for province in provinces %}
-                    <option value="{{ province }}" {% if selected_province == province %}selected{% elif not selected_province and province == 'Gauteng' %}selected{% endif %}>
-                        {{ province }}
-                    </option>
-                    {% endfor %}
+                    <!-- Province options will be dynamically updated here -->
                 </select>
             </div>
-            {% endif %}
 
             <button type="button" onclick="submitWeatherForm()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-200">Get Weather</button>
         </form>
     </div>
 
     <!-- Weather Information Display -->
-    <div id="weather-info" class="{% if not weather_info %}hidden{% endif %} mt-12 max-w-4xl mx-auto bg-gray-100 p-8 rounded-lg shadow-lg transition-opacity duration-500 ease-in-out">
-        <h2 class="text-5xl font-bold text-center text-gray-800">{{ selected_province }}</h2>
+    <div id="weather-info" class="hidden mt-12 max-w-4xl mx-auto bg-gray-100 p-8 rounded-lg shadow-lg transition-opacity duration-500 ease-in-out">
+        <h2 class="text-5xl font-bold text-center text-gray-800" id="weather-province">Province</h2>
         <!-- Live Temperature Display -->
-        <p class="text-5xl font-bold text-center text-blue-600 mt-2">{{ weather_info.daily.temperature_2m_max|first }}°C</p>
-        <p class="text-center text-2xl text-gray-600 mt-2">Mostly Sunny</p>
-        <p class="text-center text-gray-600 mt-2">Sunny conditions will continue all day. Wind gusts are up to 24 km/h.</p>
+        <p class="text-5xl font-bold text-center text-blue-600 mt-2" id="weather-temperature">--°C</p>
+        <p class="text-center text-2xl text-gray-600 mt-2">Condition</p>
+        <p class="text-center text-gray-600 mt-2">Description of weather conditions.</p>
 
         <!-- 10-Day Weather Forecast -->
         <h3 class="text-3xl font-bold text-gray-800 mt-12 mb-6">10-Day Forecast</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-            {% for day, max_temp, min_temp, precip in daily_weather_data %}
-            <div class="bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center">
-                <p class="text-xl font-semibold">{{ day }}</p>
-                <i class="fas fa-cloud-sun-rain text-4xl text-blue-500 mb-4"></i>
-                <p class="text-2xl font-bold">Max: {{ max_temp }}°C</p>
-                <p class="text-2xl font-bold">Min: {{ min_temp }}°C</p>
-                <p class="text-sm text-gray-600">Precipitation: {{ precip }} mm</p>
-            </div>
-            {% endfor %}
+        <div id="daily-forecast" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+            <!-- Daily weather data will be dynamically added here -->
         </div>
     </div>
 </div>
 
+<!-- JavaScript Functions for Weather Integration -->
 <script>
-    function onCountryChange(element) {
-        document.getElementById('weather-form').submit();
+    // Function to fetch provinces based on selected country
+    function fetchProvinces(element) {
+        const selectedCountry = element.value;
+        const provinceSelect = document.getElementById('province-select');
+
+        // Clear current options
+        provinceSelect.innerHTML = '<option value="">Select a province</option>';
+
+        // Determine provinces based on the selected country
+        let provinces = [];
+        if (selectedCountry === 'South Africa') {
+            provinces = ['Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal', 'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'];
+        } else if (selectedCountry === 'Namibia') {
+            provinces = ['Erongo', 'Hardap', 'Kavango East', 'Kavango West', 'Khomas', 'Kunene', 'Ohangwena', 'Omaheke', 'Omusati', 'Oshana', 'Oshikoto', 'Otjozondjupa', 'Zambezi'];
+        }
+
+        // Populate the province dropdown with the new options
+        provinces.forEach(province => {
+            const option = document.createElement('option');
+            option.value = province;
+            option.textContent = province;
+            provinceSelect.appendChild(option);
+        });
     }
 
+    // Function to submit weather form and fetch weather data
     function submitWeatherForm() {
         const form = document.getElementById('weather-form');
         const country = form.elements['country'].value;
         const province = form.elements['province'].value;
 
         if (country && province) {
-            form.submit();
+            const url = `/weather-integration/?country=${country}&province=${province}`;
+            
+            fetch(url, {
+                headers: {
+                    'x-requested-with': 'XMLHttpRequest'  // Indicate it's an AJAX request
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Check if weather data is returned successfully
+                if (data.weather_info) {
+                    displayWeatherData(data);
+                } else {
+                    console.error('Could not retrieve weather data.');
+                }
+            })
+            .catch(error => console.error('Error:', error));
         } else {
             alert('Please select both country and province.');
         }
     }
+
+    // Function to display weather data on the page
+    function displayWeatherData(data) {
+        // Update the weather info on the page using the data received
+        document.getElementById('weather-province').innerText = data.selected_province;
+        document.getElementById('weather-temperature').innerText = `${data.weather_info.daily.temperature_2m_max[0]}°C`;
+
+        const dailyForecastContainer = document.getElementById('daily-forecast');
+        dailyForecastContainer.innerHTML = '';
+
+        // Display 10-day weather forecast
+        data.daily_weather_data.forEach(([day, max_temp, min_temp, precip]) => {
+            const dayDiv = document.createElement('div');
+            dayDiv.className = 'bg-white p-6 rounded-lg shadow-md flex flex-col items-center justify-center';
+            dayDiv.innerHTML = `
+                <p class="text-xl font-semibold">${day}</p>
+                <i class="fas fa-cloud-sun-rain text-4xl text-blue-500 mb-4"></i>
+                <p class="text-2xl font-bold">Max: ${max_temp}°C</p>
+                <p class="text-2xl font-bold">Min: ${min_temp}°C</p>
+                <p class="text-sm text-gray-600">Precipitation: ${precip} mm</p>
+            `;
+            dailyForecastContainer.appendChild(dayDiv);
+        });
+
+        // Show the weather info container
+        document.getElementById('weather-info').classList.remove('hidden');
+    }
+
+    // Initialize default provinces on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchProvinces(document.querySelector('input[name="country"]:checked'));
+    });
 </script>
 {% endblock %}

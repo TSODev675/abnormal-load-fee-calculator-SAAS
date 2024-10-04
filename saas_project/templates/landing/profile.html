@@ -1,21 +1,66 @@
-<!-- landing/templates/landing/profile.html -->
+<!-- templates/landing/profile.html -->
 {% extends 'dashboard/base_dashboard.html' %}
-{% load static %} <!-- Add this line to load static files -->
+{% load static %}
 
 {% block title %}User Profile{% endblock %}
 
 {% block content %}
-<section class="bg-white py-20">
+<section class="bg-gray-100 py-12">
     <div class="container mx-auto px-6">
-        <h1 class="text-5xl font-bold mb-4">User Profile</h1>
-        <div class="mt-6">
-            <p class="text-xl">Welcome to your profile page! Use this space to view and manage your account information.</p>
-            <!-- Example Profile Section -->
-            <div class="mt-8 flex items-center">
-                <img src="{% static 'images/Final_logo.png' %}" alt="Profile Logo" class="w-32 h-32 rounded-full"> <!-- Updated line -->
-                <div class="ml-6">
-                    <h2 class="text-3xl font-bold">John Doe</h2>
-                    <p class="text-gray-600">john.doe@example.com</p>
+        <!-- Profile Card -->
+        <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+            <!-- Profile Banner -->
+            <div class="h-32 bg-blue-600 flex items-center justify-center">
+                <h1 class="text-3xl font-bold text-white">User Profile</h1>
+            </div>
+
+            <!-- Profile Content -->
+            <div class="p-8">
+                <!-- Profile Image and User Details -->
+                <div class="flex items-center space-x-6">
+                    <!-- Placeholder Profile Image Container -->
+                    <div class="relative">
+                        <!-- Display placeholder user icon if no profile image is available -->
+                        <div class="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center shadow-md">
+                            <i class="fas fa-user-circle text-8xl text-gray-500"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Placeholder User Info -->
+                    <div>
+                        <h2 class="text-4xl font-bold text-gray-800">John Doe</h2> <!-- Placeholder Name -->
+                        <p class="text-gray-600 text-lg">john.doe@example.com</p> <!-- Placeholder Email -->
+                    </div>
+                </div>
+
+                <!-- User Bio / Additional Info -->
+                <div class="mt-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">About</h3>
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        This is a placeholder bio. Once login functionality is implemented, this section will display the user's bio.
+                    </p>
+                </div>
+
+                <!-- Additional Details Section (e.g., account settings, contact info, etc.) -->
+                <div class="mt-8">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Additional Details</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-bold text-gray-800">Phone Number</h4>
+                            <p class="text-gray-600">+1 234 567 890</p> <!-- Placeholder Phone Number -->
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-gray-800">Address</h4>
+                            <p class="text-gray-600">123 Placeholder St, City, Country</p> <!-- Placeholder Address -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="mt-8 flex space-x-4">
+                    <!-- Add placeholder URLs until login is implemented -->
+                    <a href="#" class="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200">Edit Profile</a>
+                    <a href="#" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg shadow-md hover:bg-gray-300 transition duration-200">Change Password</a>
                 </div>
             </div>
         </div>

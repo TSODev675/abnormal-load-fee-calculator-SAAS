@@ -1,18 +1,27 @@
-<!-- dashboard/templates/dashboard/dashboard.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-6 py-8">
+<!-- Apply the fade-in effect using Alpine.js and CSS transitions -->
+<div class="container mx-auto px-6 py-8" x-data="{ show: false }" x-init="show = true" x-show="show"
+    x-transition:enter="transition ease-out duration-700" x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100">
+
+    <!-- Dashboard Heading -->
     <h1 class="text-3xl font-bold mb-8">Our Services</h1>
+
+    <!-- Services Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {% for service in services %}
-        <a href="{% url service.url %}" class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-200">
+        <a href="{% url service.url %}"
+            class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition duration-300 ease-in-out transform hover:scale-105">
+            <!-- Service Icon and Title -->
             <div class="flex items-center mb-4">
                 <i class="{{ service.icon }} text-blue-600 text-4xl"></i>
                 <h2 class="ml-4 text-xl font-semibold">{{ service.title }}</h2>
             </div>
+            <!-- Service Description -->
             <p class="text-gray-700">{{ service.description }}</p>
         </a>
         {% endfor %}

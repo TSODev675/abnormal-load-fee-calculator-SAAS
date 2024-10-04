@@ -1,66 +1,88 @@
-body {
+/* Global Styles */
+body, html {
     font-family: 'Helvetica', 'Arial', sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.bg-blue-600 {
-    background-color: #001f3f;
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
-.text-blue-600 {
-    color: #001f3f;
-}
+/* Custom Colors */
+.bg-blue-600 { background-color: #001f3f; }
+.text-blue-600 { color: #001f3f; }
 
-.rounded-full {
-    border-radius: 9999px;
-}
+/* Utility Classes */
+.rounded-full { border-radius: 9999px; }
+.rounded-lg { border-radius: 0.5rem; }
+.hidden { display: none; }
+.flex-grow { flex-grow: 1; }
+.footer { margin-top: auto; text-align: center; }
 
-.rounded-lg {
-    border-radius: 0.5rem;
-}
-
-.hidden {
-    display: none;
-}
-
-#province-container select {
-    transition: all 0.3s ease-in-out;
-}
-
-#weather-info {
-    opacity: 0;
-}
-
-#weather-info.show {
-    opacity: 1;
-}
-#province-container {
-    display: block !important;  /* Ensure display is set to block */
-}
-
+/* Keyframe Animations */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.animate-fade-in {
-    animation: fadeIn 1s ease-in-out forwards;
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 @keyframes slideIn {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
-.animate-slide-in {
-    animation: slideIn 0.5s ease-in-out forwards;
+.animate-fade-in { animation: fadeIn 1s ease-in-out forwards; }
+.animate-slide-in { animation: slideIn 0.5s ease-in-out forwards; }
+
+/* Sidebar Styling */
+#sidebar {
+    height: calc(100vh - 64px); /* Full height minus the navbar height */
+    width: 16rem; /* Expanded width */
+    transition: width 0.3s ease-in-out;
+}
+
+/* Adjust the sidebar width when collapsed/expanded */
+#sidebar.w-16 { width: 4rem; }
+#sidebar.w-64 { width: 16rem; }
+
+/* Hide text when sidebar is collapsed */
+#sidebar.w-16 .sidebar-text,
+#sidebar.w-16 #sidebar-title { display: none; }
+
+#sidebar.w-64 .sidebar-text,
+#sidebar.w-64 #sidebar-title { display: block; }
+
+/* Sidebar Button */
+#sidebar-toggle {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: #ffffff;
+}
+
+#sidebar-toggle:hover { color: #ffcccb; }
+
+/* Content and Footer Adjustments */
+#main-content {
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 16rem; /* Default expanded sidebar width */
+}
+
+#main-content.ml-16 { margin-left: 4rem; } /* Margin for collapsed sidebar */
+#main-content.ml-64 { margin-left: 16rem; } /* Margin for expanded sidebar */
+
+footer {
+    background-color: #1a202c;
+    color: white;
+    text-align: center;
+    width: 100%;
+    padding: 1rem 0;
+    margin-top: auto; /* Push footer to the bottom */
+    z-index: 10;
+    position: relative;
 }

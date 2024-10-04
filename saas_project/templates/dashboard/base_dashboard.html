@@ -8,9 +8,58 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <title>{% block title %}Abnormal Load Permit System{% endblock %}</title>
+    <style>
+        /* Ensure that the body and html take the full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Set height and scrolling behavior for the wrapper */
+        .flex-grow {
+            flex-grow: 1;
+            overflow: hidden; /* Prevent main body from scrolling */
+        }
+
+        /* Sidebar and Main Content Structure */
+        #wrapper {
+            display: flex;
+            height: calc(100vh - 64px); /* Full height minus the navbar height */
+            overflow: hidden;
+        }
+
+        /* Sidebar styles */
+        #sidebar {
+            width: 16rem; /* Expanded width */
+            height: calc(100vh - 64px); /* Full height minus the navbar height */
+            overflow-y: auto; /* Enable scrolling for sidebar */
+        }
+
+        /* Main content area styles */
+        #main-content {
+            flex-grow: 1;
+            height: calc(100vh - 64px); /* Adjust height for content */
+            overflow-y: auto; /* Enable vertical scrolling for content */
+            padding: 1rem;
+            margin-left: 16rem; /* Adjust based on the sidebar's width */
+        }
+
+        /* Sidebar toggle styles */
+        .w-16 {
+            width: 4rem !important;
+        }
+
+        .ml-16 {
+            margin-left: 4rem !important;
+        }
+
+        .ml-64 {
+            margin-left: 16rem !important;
+        }
+    </style>
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
-
     <!-- Navbar -->
     <nav class="bg-gray-800 text-white px-4 py-3">
         <div class="flex justify-between items-center">
@@ -28,9 +77,9 @@
     </nav>
 
     <!-- Sidebar and Content Wrapper -->
-    <div class="flex flex-grow overflow-hidden">
+    <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar" class="bg-gray-800 text-white h-full flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
+        <div id="sidebar" class="bg-gray-800 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
             <!-- Sidebar Header with Toggle Button -->
             <div>
                 <div class="flex justify-between items-center p-4">
@@ -81,16 +130,16 @@
             </div>
 
             <!-- Sidebar Logout Button (Stick to Bottom) -->
-            <div class="hover:bg-gray-700 rounded-md px-2 py-2">
-                <a href="/" class="flex items-center space-x-4">
+            <div class="px-2 py-4">
+                <button class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="ml-2 sidebar-text">Logout</span>
-                </a>
+                </button>
             </div>
         </div>
 
         <!-- Main content area -->
-        <div class="ml-16 w-full p-6 transition-all duration-300 ease-in-out" id="main-content">
+        <div id="main-content">
             {% block content %}
             <!-- Page-specific content will go here -->
             {% endblock %}

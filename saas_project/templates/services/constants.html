@@ -1,5 +1,49 @@
-<!-- services/templates/services/constants.html -->
 {% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
 {% block content %}
-<h1>Constants Page</h1>
+<div class="container">
+    <h1>Constants Page</h1>
+
+    <!-- File Upload Form -->
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="constants_file" class="form-label">Upload Constants File</label>
+            <input type="file" class="form-control" id="constants_file" name="constants_file">
+        </div>
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
+    <hr>
+
+    <!-- Constants Manual Update Form -->
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Constant Name</th>
+                    <th>Description</th>
+                    <th>Province Code</th>
+                    <th>Constant Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for constant in constants %}
+                    <tr>
+                        <td>{{ constant.dbFinYear }}</td>
+                        <td>{{ constant.dbConstName }}</td>
+                        <td>{{ constant.dbConstDescript }}</td>
+                        <td>{{ constant.dbProvCode }}</td>
+                        <td>{{ constant.dbConstValue }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+    </form>
+</div>
 {% endblock %}
+

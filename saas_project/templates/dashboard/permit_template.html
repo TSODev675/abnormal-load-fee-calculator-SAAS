@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permit Summary</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { padding: 20px; border: 1px solid #ddd; width: 80%; margin: auto; }
+        h2 { text-align: center; }
+        .section { margin-bottom: 20px; }
+        .info { margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Permit Summary</h2>
+        <div class="section">
+            <h3>Axle/Load Information</h3>
+            <p class="info"><strong>Axle Unit:</strong> {{ form_data.axle_unit }}</p>
+            <p class="info"><strong>Allowable Mass:</strong> {{ form_data.allowable_mass }} kg</p>
+            <p class="info"><strong>Actual Mass:</strong> {{ form_data.actual_mass }} kg</p>
+            <p class="info"><strong>Total Fee:</strong> R{{ form_data.total_fee }}</p>
+        </div>
+    </div>
+</body>
+</html>

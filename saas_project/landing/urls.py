@@ -3,7 +3,8 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('calculator/', views.calculator_view, name='calculator'),
+    #path('calculator/', views.calculator_view, name='calculator'),
+    path('calculator/', views.fee_calculator, name='calculator'),
     path('profile/', views.profile_view, name='profile'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('route-optimization/', views.route_optimization_view, name='route-optimization'),
@@ -15,4 +16,5 @@ urlpatterns = [
     path('av-number/', views.av_number_view, name='av-number'),
     path('account/', views.account_view, name='account'), 
     path('constants/', views.constants_view, name='constants'),  
+    path('generate-pdf/', views.generate_pdf, name='generate_pdf'),
 ]

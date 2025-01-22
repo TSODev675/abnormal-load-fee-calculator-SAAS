@@ -1,0 +1,202 @@
+<form method="post" action="{% url 'calculator' %}">
+    {% csrf_token %}
+
+    <!-- Step 1: Axle/Load Information -->
+    <div x-show="step === 1" x-transition:enter="transition transform ease-out duration-700"
+        x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition transform ease-in duration-700"
+        x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-90">
+        <h1 class="text-2xl font-bold mb-6">Step 1: Axle/Load Information</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="axle_unit" class="block text-gray-700">Axle Unit</label>
+                <select id="axle_unit" name="axle_unit" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select Axle Unit</option>
+                    <option value="TF">TF</option>
+                    <option value="TR">TR</option>
+                    <option value="DO">DO</option>
+                    <option value="ST">ST</option>
+                    <option value="C1">C1</option>
+                    <option value="C2">C2</option>
+                </select>
+            </div>
+            <div>
+                <label for="allowable_mass" class="block text-gray-700">Allowable Mass (kg)</label>
+                <input type="number" id="allowable_mass" name="allowable_mass" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="actual_mass" class="block text-gray-700">Actual Mass (kg)</label>
+                <input type="number" id="actual_mass" name="actual_mass" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="no_of_axles" class="block text-gray-700">No of Axles</label>
+                <input type="number" id="no_of_axles" name="no_of_axles" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="axle_type" class="block text-gray-700">Axle Type</label>
+                <select id="axle_type" name="axle_type" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select Axle Type</option>
+                    <option value="Single">Single</option>
+                    <option value="Dual">Dual</option>
+                    <option value="4 Single">4 Single</option>
+                    <option value="4 Dual">4 Dual</option>
+                    <option value="6 Dual">6 Dual</option>
+                    <option value="8 Dual">8 Dual</option>
+                </select>
+            </div>
+            <div>
+                <label for="w_spc_a" class="block text-gray-700">W-Spc A (mm)</label>
+                <input type="number" id="w_spc_a" name="w_spc_a" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="w_spc_b" class="block text-gray-700">W-Spc B (mm)</label>
+                <input type="number" id="w_spc_b" name="w_spc_b" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="type_pressure" class="block text-gray-700">Tyre Pressure (kPa)</label>
+                <input type="number" id="type_pressure" name="type_pressure" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+        </div>
+
+        <!-- Next Button -->
+        <div class="mt-6 flex justify-end">
+            <button type="button" @click="step = 2" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 2: Additional Information -->
+    <div x-show="step === 2">
+        <h1 class="text-2xl font-bold mb-6">Step 2: Additional Information</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label for="total_mass" class="block text-gray-700">Total Actual Mass (kg)</label>
+                <input type="number" id="total_mass" name="total_mass" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="wheel_track" class="block text-gray-700">Wheel Track (mm)</label>
+                <input type="number" id="wheel_track" name="wheel_track" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="av_no" class="block text-gray-700">AV No.</label>
+                <select id="av_no" name="av_no" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option>Select AV No.</option>
+                    <option value="Single">Single</option>
+                    <option value="Dual">Dual</option>
+                </select>
+            </div>
+            <div>
+                <label for="laden_length" class="block text-gray-700">Total Laden Length (mm)</label>
+                <input type="number" id="laden_length" name="laden_length" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="laden_width" class="block text-gray-700">Total Laden Width (mm)</label>
+                <input type="number" id="laden_width" name="laden_width" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="laden_height" class="block text-gray-700">Total Laden Height (mm)</label>
+                <input type="number" id="laden_height" name="laden_height" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="total_distance" class="block text-gray-700">Total Distance (km)</label>
+                <input type="number" id="total_distance" name="total_distance" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="distance_escorted" class="block text-gray-700">Distance Escorted (km)</label>
+                <input type="number" id="distance_escorted" name="distance_escorted" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="no_of_escorts" class="block text-gray-700">No. of Traffic Officer Escorts</label>
+                <input type="number" id="no_of_escorts" name="no_of_escorts" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+            <div>
+                <label for="rural_speed" class="block text-gray-700">Rural Speed (km/h)</label>
+                <input type="number" id="rural_speed" name="rural_speed" class="w-full p-2 border border-gray-300 rounded-md">
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button type="button" @click="step = 1" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Previous
+            </button>
+            <button type="button" @click="step = 3" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 3: Additional Services -->
+    <div x-show="step === 3">
+        <h1 class="text-2xl font-bold mb-6">Step 3: Additional Services</h1>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="engineer_fee" name="engineer_fee" class="w-5 h-5">
+                <label for="engineer_fee" class="text-gray-700">Charge Engineer's Fee</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="weekend_travel" name="weekend_travel" class="w-5 h-5">
+                <label for="weekend_travel" class="text-gray-700">Weekend Travel</label>
+            </div>
+            <div class="flex items-center space-x-2">
+                <input type="checkbox" id="mobile_crane" name="mobile_crane" class="w-5 h-5">
+                <label for="mobile_crane" class="text-gray-700">Mobile Crane</label>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button type="button" @click="step = 2" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Previous
+            </button>
+            <button type="button" @click="step = 4" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Next
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 4: Calculated Fee -->
+    <div x-show="step === 4">
+        <h1 class="text-2xl font-bold mb-6">Step 4: Calculated Fee</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+                <label for="province" class="block text-gray-700">Province</label>
+                <select id="province" name="province" class="w-full p-2 border border-gray-300 rounded-md">
+                    <option value="FS">FS</option>
+                    <option value="GP">GP</option>
+                    <option value="MP">MP</option>
+                    <option value="EC">EC</option>
+                    <option value="RA">RA</option>
+                    <option value="NC">NC</option>
+                    <option value="LP">LP</option>
+                    <option value="KN">KN</option>
+                    <option value="NW">NW</option>
+                </select>
+            </div>
+
+            <!-- Display fee breakdown and calculated total fee -->
+            <div class="bg-yellow-100 p-4 rounded-lg shadow-md">
+                <h3 class="text-lg font-bold">Fee Breakdown</h3>
+                <ul>
+                    <li>Mass Tariff: <span>{{ mass_tariff }}</span></li>
+                    <li>Damage: <span>{{ damage }}</span></li>
+                    <li>Total Fee: <span>{{ total_fee }}</span></li>
+                </ul>
+                <div class="mt-4">
+                    <strong>Total Fee: <span class="text-xl">R{{ total_fee }}</span></strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+            <button type="button" @click="step = 3" class="bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Previous
+            </button>
+            <button type="submit" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Submit
+            </button>
+        </div>
+    </div>
+</form>

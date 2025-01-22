@@ -1,7 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import requests
-from django.http import JsonResponse
-
+from django.http import JsonResponse, HttpResponse
+from django.conf import settings
+from .models import AxleLoadData
+from .calculations import calculate_fees
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import pandas as pd
+import os
 # Coordinates for each province in South Africa and Namibia
 COUNTRY_PROVINCES_COORDINATES = {
     'South Africa': {
@@ -147,3 +153,145 @@ def account_view(request):
 
 def constants_view(request):
     return render(request, 'services/constants.html')
+
+
+
+def safe_float_conversion(value, default=0.0):
+    """
+    Safely convert a value to float, handling empty strings and None values.
+    :param value: Value to convert to float
+    :param default: Default value if conversion fails or value is empty
+    :return: Converted float or default value
+    """
+    try:
+        return float(value) if value not in [None, '', 'None'] else default
+    except ValueError:
+        return default
+
+
+CONSTANTS_FILE_PATH = os.path.join(settings.BASE_DIR, 'constants', 'Constants_Full.xlsx')
+
+# Helper function to read the constants file
+def read_constants():
+    if os.path.exists(CONSTANTS_FILE_PATH):
+        constants_df = pd.read_excel(CONSTANTS_FILE_PATH, sheet_name='Constants')
+        descriptions_df = pd.read_excel(CONSTANTS_FILE_PATH, sheet_name='ConstantsDescription')
+        return constants_df, descriptions_df
+    return None, None
+
+# View for the constants page
+# Process the constants and descriptions dataframes
+def constants_view(request):
+    # Read constants and descriptions
+    constants_df, descriptions_df = read_constants()
+
+    # Debugging: Check if DataFrames are None
+    print("constants_df:", constants_df)
+    print("descriptions_df:", descriptions_df)
+
+    if constants_df is None or descriptions_df is None:
+        return HttpResponse("Error reading constants or descriptions file", status=500)
+
+    # Merge the constants and descriptions dataframes into a single list of dictionaries for easier rendering
+    merged_constants = []
+    for _, row in constants_df.iterrows():
+        # Get the description for the constant
+        description = descriptions_df[descriptions_df['dbConstName'] == row['dbConstName']]['dbConstDescript'].values
+        
+        # If description exists, get the first value, otherwise set to an empty string
+        description_value = description[0] if len(description) > 0 else ""
+
+        # Add the merged data to the list as a dictionary
+        merged_constants.append({
+            'dbFinYear': row['dbFinYear'],
+            'dbConstName': row['dbConstName'],
+            'dbConstDescript': description_value,
+            'dbProvCode': row['dbProvCode'],
+            'dbConstValue': row['dbConstValue']
+        })
+
+    # Render the template with merged constants
+    return render(request, 'services/constants.html', {'constants': merged_constants})
+
+
+def fee_calculator(request):
+    calculated_fees = {'mass_tariff': 0, 'damage': 0, 'total_fee': 0}  # Initialize default values
+
+    if request.method == "POST":
+        form_data = {
+            'axle_unit': request.POST.get('axle_unit', '')[:5].strip(),  # Truncate to 5 chars
+            'allowable_mass': float(request.POST.get('allowable_mass', 0)),
+            'actual_mass': float(request.POST.get('actual_mass', 0)),
+            'no_of_axles': int(request.POST.get('no_of_axles', 0)),
+            'axle_type': request.POST.get('axle_type', '')[:20].strip(),  # Truncate to 20 chars
+            'w_spc_a': float(request.POST.get('w_spc_a', 0)),
+            'w_spc_b': float(request.POST.get('w_spc_b', 0)),
+            'type_pressure': float(request.POST.get('type_pressure', 0)),
+            'total_mass': float(request.POST.get('total_mass', 0)),
+            'wheel_track': float(request.POST.get('wheel_track', 0)),
+            'av_no': request.POST.get('av_no', '')[:10].strip(),  # Truncate to 10 chars
+            'laden_length': float(request.POST.get('laden_length', 0)),
+            'laden_width': float(request.POST.get('laden_width', 0)),
+            'laden_height': float(request.POST.get('laden_height', 0)),
+            'total_distance': float(request.POST.get('total_distance', 0)),
+            'distance_escorted': float(request.POST.get('distance_escorted', 0)),
+            'no_of_escorts': int(request.POST.get('no_of_escorts', 0)),
+            'rural_speed': float(request.POST.get('rural_speed', 0)),
+            'engineer_fee': request.POST.get('engineer_fee') == 'on',
+            'weekend_travel': request.POST.get('weekend_travel') == 'on',
+            'mobile_crane': request.POST.get('mobile_crane') == 'on',
+            'province': request.POST.get('province', '')[:2].strip(),  # Truncate to 2 chars
+        }
+
+         # Save the data and calculated fee in the database
+        calculated_fees = calculate_fees(form_data)
+
+        AxleLoadData.objects.create(**form_data, calculated_fee=calculated_fees['total_fee'])
+
+    return render(request, 'dashboard/calculator.html', {
+        'mass_tariff': calculated_fees['mass_tariff'],
+        'damage': calculated_fees['damage'],
+        'total_fee': calculated_fees['total_fee']
+    })
+
+
+def generate_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="axle_permit.pdf"'
+    
+    # Create the PDF object
+    c = canvas.Canvas(response, pagesize=letter)
+    width, height = letter
+
+    # Header
+    c.setFont("Helvetica-Bold", 16)
+    c.drawString(200, height - 50, "Axle Load Permit")
+    
+    c.setFont("Helvetica", 12)
+    c.drawString(50, height - 100, f"Axle Unit: {request.POST.get('axle_unit', '')}")
+    c.drawString(50, height - 120, f"Allowable Mass (kg): {request.POST.get('allowable_mass', '')}")
+    c.drawString(50, height - 140, f"Actual Mass (kg): {request.POST.get('actual_mass', '')}")
+    c.drawString(50, height - 160, f"No. of Axles: {request.POST.get('no_of_axles', '')}")
+    c.drawString(50, height - 180, f"Axle Type: {request.POST.get('axle_type', '')}")
+    c.drawString(50, height - 200, f"Total Laden Length (mm): {request.POST.get('laden_length', '')}")
+    c.drawString(50, height - 220, f"Total Laden Width (mm): {request.POST.get('laden_width', '')}")
+    c.drawString(50, height - 240, f"Total Laden Height (mm): {request.POST.get('laden_height', '')}")
+    c.drawString(50, height - 260, f"Total Distance (km): {request.POST.get('total_distance', '')}")
+    c.drawString(50, height - 280, f"Distance Escorted (km): {request.POST.get('distance_escorted', '')}")
+    c.drawString(50, height - 300, f"No. of Traffic Officer Escorts: {request.POST.get('no_of_escorts', '')}")
+    c.drawString(50, height - 320, f"Rural Speed (km/h): {request.POST.get('rural_speed', '')}")
+    c.drawString(50, height - 340, f"Province: {request.POST.get('province', '')}")
+    
+    # Fees Section
+    c.setFont("Helvetica-Bold", 14)
+    c.drawString(50, height - 380, "Calculated Fee")
+    c.setFont("Helvetica", 12)
+    c.drawString(50, height - 400, f"Mass Tariff: R{request.POST.get('mass_tariff', '0.00')}")
+    c.drawString(50, height - 420, f"Damage: R{request.POST.get('damage', '0.00')}")
+    c.drawString(50, height - 440, f"Total Fee: R{request.POST.get('total_fee', '0.00')}")
+    
+    # Finalizing PDF
+    c.showPage()
+    c.save()
+    
+    return response

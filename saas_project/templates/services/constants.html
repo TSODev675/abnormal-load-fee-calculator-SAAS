@@ -1,5 +1,75 @@
-<!-- services/templates/services/constants.html -->
 {% extends 'dashboard/base_dashboard.html' %}
+{% load static %}
+
+{% block title %}Constants{% endblock %}
+
 {% block content %}
-<h1>Constants Page</h1>
+<section class="bg-gray-100 py-10">
+    <div class="container mx-auto px-6">
+        <h2 class="text-3xl font-bold mb-6 text-center">Constants Table</h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-md overflow-x-auto">
+            <table class="w-full border-collapse">
+                <thead>
+                    <tr class="bg-blue-600 text-white">
+                        <th class="p-3 text-left">ID</th>
+                        <th class="p-3 text-left">Financial Year</th>
+                        <th class="p-3 text-left">Constant Name</th>
+                        <th class="p-3 text-left">Province Code</th>
+                        <th class="p-3 text-left">Value</th>
+                        <th class="p-3 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for constant in constants %}
+                    <tr class="border-b">
+                        <td class="p-3">{{ constant.id }}</td>
+                        <td class="p-3">{{ constant.dbfinyear }}</td>
+                        <td class="p-3">{{ constant.dbconstname }}</td>
+                        <td class="p-3">{{ constant.dbprovcode }}</td>
+                        <td class="p-3">
+                            <input type="text" id="value-{{ constant.id }}" value="{{ constant.dbconstvalue }}"
+                                class="border p-2 w-full rounded">
+                        </td>
+                        <td class="p-3">
+                            <button onclick="updateValue({{ constant.id }})"
+                                class="bg-green-500 text-white px-3 py-2 rounded hover:bg-green-600">Save</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<script>
+    function updateValue(constantId) {
+        const newValue = document.getElementById(`value-${constantId}`).value;
+
+        fetch("{% url 'update_constant_value' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `constant_id=${constantId}&new_value=${newValue}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Value updated successfully!");
+                    // Optionally, reload the page to reflect the updated value
+                    window.location.reload();
+                } else {
+                    alert("Error updating value: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert("Something went wrong. Try again.");
+            });
+    }
+</script>
+
 {% endblock %}

@@ -1,0 +1,97 @@
+-----------------------Test Case 1: Standard Load----------------------------------
+Axle Unit: TF
+Allowable Mass: 20000 kg
+Actual Mass: 18000 kg
+No of Axles: 4
+Axle Type: Dual
+W-Spc A: 1200 mm
+W-Spc B: 1300 mm
+Tyre Pressure: 750 kPa
+Total Mass: 35000 kg
+Wheel Track: 2500 mm
+AV No: Single
+Laden Length: 18000 mm
+Laden Width: 2500 mm
+Laden Height: 4300 mm
+Total Distance: 500 km
+Distance Escorted: 100 km
+No of Escorts: 2
+Rural Speed: 80 km/h
+Engineer Fee: Checked (True)
+Weekend Travel: Not Checked (False)
+Mobile Crane: Not Checked (False)
+Province: GP
+
+----------------------------Test Case 2: Oversized Load-------------------------
+Axle Unit: DO
+Allowable Mass: 30000 kg
+Actual Mass: 32000 kg
+No of Axles: 6
+Axle Type: 6 Dual
+W-Spc A: 1500 mm
+W-Spc B: 1600 mm
+Tyre Pressure: 850 kPa
+Total Mass: 62000 kg
+Wheel Track: 3000 mm
+AV No: Dual
+Laden Length: 25000 mm
+Laden Width: 3000 mm
+Laden Height: 5000 mm
+Total Distance: 1200 km
+Distance Escorted: 500 km
+No of Escorts: 4
+Rural Speed: 60 km/h
+Engineer Fee: Checked (True)
+Weekend Travel: Checked (True)
+Mobile Crane: Not Checked (False)
+Province: FS
+
+------------------------Test Case 3: Lightweight Load------------------------
+Axle Unit: ST
+Allowable Mass: 15000 kg
+Actual Mass: 14000 kg
+No of Axles: 2
+Axle Type: Single
+W-Spc A: 1000 mm
+W-Spc B: 1100 mm
+Tyre Pressure: 650 kPa
+Total Mass: 28000 kg
+Wheel Track: 2200 mm
+AV No: Single
+Laden Length: 12000 mm
+Laden Width: 2000 mm
+Laden Height: 3800 mm
+Total Distance: 200 km
+Distance Escorted: 50 km
+No of Escorts: 1
+Rural Speed: 100 km/h
+Engineer Fee: Not Checked (False)
+Weekend Travel: Not Checked (False)
+Mobile Crane: Not Checked (False)
+Province: MP
+
+
+------------Test Case 4: High Distance with Escort------------------
+Axle Unit: C1
+Allowable Mass: 25000 kg
+Actual Mass: 22000 kg
+No of Axles: 5
+Axle Type: 4 Dual
+W-Spc A: 1350 mm
+W-Spc B: 1400 mm
+Tyre Pressure: 780 kPa
+Total Mass: 44000 kg
+Wheel Track: 2800 mm
+AV No: Dual
+Laden Length: 20000 mm
+Laden Width: 2800 mm
+Laden Height: 4000 mm
+Total Distance: 800 km
+Distance Escorted: 300 km
+No of Escorts: 3
+Rural Speed: 90 km/h
+Engineer Fee: Checked (True)
+Weekend Travel: Not Checked (False)
+Mobile Crane: Checked (True)
+Province: NW
+--------------------------------------------

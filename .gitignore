@@ -1,0 +1,39 @@
+# Ignore the virtual environment folder
+myenv/
+
+# Ignore Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Ignore Django static files (if not needed in version control)
+staticfiles/
+
+# Ignore the SQLite database file
+db.sqlite3
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore environment variables file
+.env
+
+# Ignore pipenv files
+Pipfile
+Pipfile.lock
+
+# Ignore pytest cache
+.pytest_cache/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Windows system files
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore test files (if not needed in version control)
+testvalues.txt

@@ -1,20 +1,150 @@
-<!-- templates/services/real_time_tracking.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Real-time Tracking{% endblock %}
 
 {% block content %}
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    .tracking-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        width: 100%;
+        max-width: 1200px;
+        margin: auto;
+    }
+    #map {
+        height: 650px; /* Larger size */
+        border-radius: 12px;
+        overflow: hidden;
+        margin-top: 10px;
+        border: 2px solid #ccc;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        font-weight: bold;
+        border-radius: 20px;
+        text-transform: uppercase;
+        font-size: 14px;
+    }
+    .status-onroute {
+        background: #0096c7;
+        color: white;
+    }
+    .status-delayed {
+        background: #ff9f00;
+        color: white;
+    }
+    .status-arrived {
+        background: #28a745;
+        color: white;
+    }
+</style>
+
 <div class="container mx-auto px-6 py-8">
-    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Real-time Tracking</h1>
-    <p class="text-lg mb-6 text-center text-gray-600">
-        Monitor your abnormal loads in real-time for better coordination and management.
+    <h1 class="text-4xl font-extrabold mb-6 text-center text-gray-900 dark:text-white">🚛 Real-time Tracking</h1>
+    <p class="text-lg mb-6 text-center text-gray-600 dark:text-gray-300">
+        Monitor your **abnormal loads** in real-time for **better coordination and management**.
     </p>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-semibold mb-4">Tracking Information</h2>
-        <p class="text-lg">Your vehicle is currently at:</p>
-        <p class="text-xl font-semibold">Latitude: -25.363, Longitude: 131.044</p>
-        <p class="text-lg mt-4">Status: On Route</p>
+
+    <!-- Tracking Card -->
+    <div class="tracking-card">
+        <h2 class="text-2xl font-semibold mb-4">📍 Vehicle Live Location</h2>
+        <p class="text-lg">Current Position:</p>
+        <p class="text-xl font-semibold" id="location">Latitude: --, Longitude: --</p>
+
+        <!-- Status Indicator -->
+        <p class="text-lg mt-4">
+            Status: <span id="status" class="status-badge status-onroute">On Route</span>
+        </p>
+
+        <!-- Map -->
+        <div id="map"></div>
     </div>
 </div>
+
+<!-- Leaflet.js -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // **Updated Route with More Waypoints**
+        let route = [
+            [-26.2041, 28.0473],  // Johannesburg Start
+            [-26.2020, 28.0460],  
+            [-26.2006, 28.0456],  
+            [-26.1985, 28.0443],  
+            [-26.1950, 28.0401],  
+            [-26.1900, 28.0380],  
+            [-26.1850, 28.0370],  
+            [-26.1838, 28.0383],  
+            [-26.1800, 28.0395],  
+            [-26.1750, 28.0408],  
+            [-26.1700, 28.0415],  
+            [-26.1650, 28.0430],  
+            [-26.1600, 28.0485],  
+            [-26.1585, 28.0548],  // Pretoria (Destination)
+        ];
+
+        // Initialize Map and Set View to Fit Entire Route
+        var map = L.map('map');
+        var bounds = L.latLngBounds(route);
+        map.fitBounds(bounds);
+
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://carto.com">Carto</a>',
+}).addTo(map);
+
+
+        // **Truck Icon (FontAwesome)**
+        var truckIcon = L.divIcon({
+            html: '<i class="fas fa-truck text-blue-500 text-3xl"></i>',
+            iconSize: [30, 30],
+            className: 'text-center'
+        });
+
+        // **Draw Route**
+        var polyline = L.polyline(route, { color: 'Green', weight: 6 }).addTo(map); // Golden Route Line
+
+        // **Add Truck Marker**
+        var truckMarker = L.marker(route[0], { icon: truckIcon }).addTo(map);
+
+        // **Move Truck Along Route**
+        let index = 0;
+        function moveTruck() {
+            if (index < route.length - 1) {
+                index++;
+                truckMarker.setLatLng(route[index]);
+                map.panTo(route[index]); // Ensure map stays centered on truck
+                document.getElementById("location").innerText = `Latitude: ${route[index][0].toFixed(5)}, Longitude: ${route[index][1].toFixed(5)}`;
+
+                // **Update Status**
+                let statusText = document.getElementById("status");
+                if (index === Math.floor(route.length / 2)) {
+                    statusText.innerText = "Delayed";
+                    statusText.className = "status-badge status-delayed";
+                }
+            } else {
+                // **Truck Arrived**
+                document.getElementById("status").innerText = "Arrived";
+                document.getElementById("status").className = "status-badge status-arrived";
+                clearInterval(truckInterval);
+            }
+        }
+
+        // **Move Truck Every 5 Seconds**
+        let truckInterval = setInterval(moveTruck, 5000);
+    });
+</script>
+
 {% endblock %}

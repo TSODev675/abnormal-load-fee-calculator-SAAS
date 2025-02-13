@@ -1,12 +1,177 @@
-<!-- templates/services/route_optimization.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Route Optimization{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-6 py-8">
-    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Route Optimization</h1>
-    <p class="text-lg mb-6 text-center text-gray-600">Efficiently plan your routes considering road restrictions and regulations.</p>
+<!-- Google Fonts & Leaflet CSS -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .optimization-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        gap: 20px;
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .control-panel {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        height: fit-content;
+    }
+
+    .map-container {
+        height: 500px;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .route-info {
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .btn {
+        background: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .btn:hover {
+        background: #0056b3;
+    }
+
+    .icon {
+        margin-right: 8px;
+    }
+
+    @media (max-width: 900px) {
+        .optimization-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="py-8">
+    <h1 class="text-4xl font-bold text-center text-gray-900">🚗 Route Optimization</h1>
+    <p class="text-lg text-center text-gray-600 mb-6">Plan the most efficient routes, avoiding traffic congestion, tolls, and road restrictions.</p>
+
+    <div class="optimization-container">
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2 class="text-2xl font-semibold mb-4">⚙️ Route Planning</h2>
+
+            <div class="mb-4">
+                <label class="font-semibold text-gray-700">Start Location:</label>
+                <input type="text" id="start-location" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter start location">
+            </div>
+
+            <div class="mb-4">
+                <label class="font-semibold text-gray-700">Destination:</label>
+                <input type="text" id="destination" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter destination">
+            </div>
+
+            <div class="mb-4">
+                <label class="font-semibold text-gray-700">Waypoints (optional):</label>
+                <textarea id="waypoints" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter waypoint locations, separated by commas"></textarea>
+            </div>
+
+            <button class="btn w-full" onclick="optimizeRoute()">🚀 Optimize Route</button>
+
+            <div id="route-info" class="route-info text-gray-700 mt-4 hidden">
+                <p>⏱ Estimated Travel Time: <span id="travel-time">--</span></p>
+                <p>📏 Distance: <span id="travel-distance">--</span></p>
+                <p>🚦 Traffic Status: <span id="traffic-status">--</span></p>
+            </div>
+        </div>
+
+        <!-- Live Map -->
+        <div class="map-container">
+            <div id="map" style="width: 100%; height: 100%;"></div>
+        </div>
+    </div>
 </div>
+
+<!-- Leaflet.js -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var map = L.map('map').setView([-26.2041, 28.0473], 10); // Default to Johannesburg
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var routeLayer;
+
+        function optimizeRoute() {
+            let start = document.getElementById("start-location").value;
+            let destination = document.getElementById("destination").value;
+            let waypointsInput = document.getElementById("waypoints").value;
+
+            if (!start || !destination) {
+                alert("Please enter both a start location and a destination.");
+                return;
+            }
+
+            // Simulated coordinates for Johannesburg Route
+            let routeCoordinates = [
+                [-26.2041, 28.0473], // Johannesburg
+                [-26.1700, 28.0415],
+                [-26.1585, 28.0548], // Midpoint
+                [-25.7461, 28.1881]  // Pretoria
+            ];
+
+            if (waypointsInput) {
+                let waypointList = waypointsInput.split(",");
+                waypointList.forEach((point, index) => {
+                    let lat = -26.2 + (Math.random() * 0.1);
+                    let lon = 28.04 + (Math.random() * 0.1);
+                    routeCoordinates.splice(index + 1, 0, [lat, lon]);
+                });
+            }
+
+            if (routeLayer) {
+                map.removeLayer(routeLayer);
+            }
+
+            routeLayer = L.polyline(routeCoordinates, {
+                color: "blue",
+                weight: 5,
+                opacity: 0.7,
+                dashArray: "10, 5"
+            }).addTo(map);
+
+            map.fitBounds(routeLayer.getBounds());
+
+            // Simulate estimated time & distance
+            let estimatedTime = (routeCoordinates.length * 4) + " min";
+            let estimatedDistance = (routeCoordinates.length * 3) + " km";
+
+            document.getElementById("travel-time").innerText = estimatedTime;
+            document.getElementById("travel-distance").innerText = estimatedDistance;
+            document.getElementById("traffic-status").innerText = "Moderate";
+
+            document.getElementById("route-info").classList.remove("hidden");
+        }
+
+        window.optimizeRoute = optimizeRoute;
+    });
+</script>
+
 {% endblock %}

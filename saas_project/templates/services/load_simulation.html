@@ -1,33 +1,175 @@
-<!-- templates/services/load_simulation.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Load Simulation{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-6 py-8">
-    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Load Simulation</h1>
-    <p class="text-lg mb-6 text-center text-gray-600">
-        Simulate your load on various road types to ensure safe transport.
-    </p>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-semibold mb-4">Load Simulation Tool</h2>
-        <p>Use the tool below to simulate your load:</p>
-        <form action="#" class="mt-4 space-y-4">
-            <div>
-                <label for="load-weight" class="block text-lg font-medium text-gray-700">Load Weight (tons):</label>
-                <input type="number" id="load-weight" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter load weight">
+<!-- Google Fonts & FontAwesome -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<!-- Load Simulation Styles -->
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .simulation-container {
+        max-width: 1200px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        align-items: center;
+    }
+
+    .simulation-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 100%;
+    }
+
+    .road-preview {
+        height: 180px;
+        background: linear-gradient(to right, #6c757d, #495057);
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .truck {
+        font-size: 40px;
+        color: #ff5733;
+        position: absolute;
+        bottom: 10px;
+        left: 0;
+        transition: transform 3s ease-in-out;
+    }
+
+    /* FIXED CHART SIZE */
+    .chart-container {
+        width: 100%;
+        max-width: 600px;
+        height: 250px;
+        margin: auto;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 900px) {
+        .simulation-container {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="py-8">
+    <h1 class="text-4xl font-bold text-center text-gray-900">🚛 Load Simulation</h1>
+    <p class="text-lg text-center text-gray-600 mb-6">Simulate your load on various road types to ensure safe transport.</p>
+
+    <!-- Simulation Grid Layout -->
+    <div class="simulation-container">
+        <!-- Simulation Control Panel -->
+        <div class="simulation-card">
+            <h2 class="text-2xl font-semibold mb-4">⚙️ Simulation Tool</h2>
+            <form class="space-y-4">
+                <div>
+                    <label class="block text-lg font-medium text-gray-700">Load Weight (tons):</label>
+                    <input type="number" id="load-weight" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Enter load weight" min="1" max="50" value="10">
+                </div>
+                <div>
+                    <label class="block text-lg font-medium text-gray-700">Select Road Type:</label>
+                    <select id="road-type" class="w-full p-2 border border-gray-300 rounded-lg">
+                        <option value="highway">Highway</option>
+                        <option value="urban">Urban Road</option>
+                        <option value="rural">Rural Road</option>
+                    </select>
+                </div>
+                <button type="button" onclick="startSimulation()" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-200">Start Simulation</button>
+            </form>
+        </div>
+
+        <!-- Road Preview & Truck Movement -->
+        <div class="simulation-card">
+            <h2 class="text-2xl font-semibold mb-4">🛣 Road Preview</h2>
+            <div class="road-preview">
+                <i class="fas fa-truck truck" id="truck"></i>
             </div>
-            <div>
-                <label for="road-type" class="block text-lg font-medium text-gray-700">Select Road Type:</label>
-                <select id="road-type" class="w-full p-2 border border-gray-300 rounded-lg">
-                    <option value="highway">Highway</option>
-                    <option value="urban">Urban Road</option>
-                    <option value="rural">Rural Road</option>
-                </select>
+        </div>
+
+        <!-- Load Impact Graph (Fixed Size) -->
+        <div class="simulation-card col-span-2">
+            <h2 class="text-2xl font-semibold mb-4">📊 Load Impact</h2>
+            <div class="chart-container">
+                <canvas id="loadGraph"></canvas>
             </div>
-            <button type="button" class="w-full bg-blue-500 text-white py-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-200">Simulate</button>
-        </form>
+        </div>
     </div>
 </div>
+
+<!-- Chart.js for Graph -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Load Simulation Script -->
+<script>
+    function startSimulation() {
+        let weight = document.getElementById("load-weight").value;
+        let roadType = document.getElementById("road-type").value;
+        let truck = document.getElementById("truck");
+
+        // Move truck forward with animation
+        truck.style.transform = "translateX(400px)";
+
+        // Change road effects
+        let road = document.querySelector(".road-preview");
+        if (roadType === "highway") {
+            road.style.background = "linear-gradient(to right, #6c757d, #495057)";
+        } else if (roadType === "urban") {
+            road.style.background = "linear-gradient(to right, #adb5bd, #868e96)";
+        } else {
+            road.style.background = "linear-gradient(to right, #7c4d00, #5a3a00)";
+        }
+
+        // Destroy previous chart if exists
+        if (window.loadChart) {
+            window.loadChart.destroy();
+        }
+
+        // Generate Load Impact Graph
+        let ctx = document.getElementById("loadGraph").getContext("2d");
+
+        let chartData = {
+            labels: ["Highway", "Urban", "Rural"],
+            datasets: [{
+                label: "Load Stress Impact",
+                data: roadType === "highway" ? [50, 30, 10] : roadType === "urban" ? [30, 50, 20] : [10, 20, 50],
+                backgroundColor: ["#28a745", "#ffc107", "#dc3545"]
+            }]
+        };
+
+        window.loadChart = new Chart(ctx, {
+            type: "bar",
+            data: chartData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // Ensures it stays within the defined size
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Reset Truck Position after 3s
+        setTimeout(() => {
+            truck.style.transform = "translateX(0)";
+        }, 3000);
+    }
+</script>
+
 {% endblock %}

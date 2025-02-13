@@ -1,13 +1,17 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404
 import requests
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
 from .models import AxleLoadData
+from .models import Constant  
 from .calculations import calculate_fees
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import pandas as pd
 import os
+from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
+
 # Coordinates for each province in South Africa and Namibia
 COUNTRY_PROVINCES_COORDINATES = {
     'South Africa': {
@@ -155,6 +159,17 @@ def constants_view(request):
     return render(request, 'services/constants.html')
 
 
+def subscription_view(request):
+    selected_plan = request.GET.get('plan', 'Basic')  # Default to 'Basic' if no plan is selected
+    payment_methods = ['Visa/Mastercard', 'EFT', 'Apple Pay', 'Google Pay']
+
+    context = {
+        'selected_plan': selected_plan,
+        'payment_methods': payment_methods
+    }
+    return render(request, 'services/subscription.html', context)
+
+
 
 def safe_float_conversion(value, default=0.0):
     """
@@ -169,49 +184,31 @@ def safe_float_conversion(value, default=0.0):
         return default
 
 
-CONSTANTS_FILE_PATH = os.path.join(settings.BASE_DIR, 'constants', 'Constants_Full.xlsx')
 
-# Helper function to read the constants file
-def read_constants():
-    if os.path.exists(CONSTANTS_FILE_PATH):
-        constants_df = pd.read_excel(CONSTANTS_FILE_PATH, sheet_name='Constants')
-        descriptions_df = pd.read_excel(CONSTANTS_FILE_PATH, sheet_name='ConstantsDescription')
-        return constants_df, descriptions_df
-    return None, None
-
-# View for the constants page
-# Process the constants and descriptions dataframes
 def constants_view(request):
-    # Read constants and descriptions
-    constants_df, descriptions_df = read_constants()
+    constants_list = Constant.objects.all().order_by('id')
+    paginator = Paginator(constants_list, 25)  # Show 25 rows per page
+    page_number = request.GET.get('page')
+    constants = paginator.get_page(page_number)
+    return render(request, 'services/constants.html', {'constants': constants})
 
-    # Debugging: Check if DataFrames are None
-    print("constants_df:", constants_df)
-    print("descriptions_df:", descriptions_df)
 
-    if constants_df is None or descriptions_df is None:
-        return HttpResponse("Error reading constants or descriptions file", status=500)
+@csrf_exempt
+def update_constant_value(request):
+    if request.method == "POST":
+        constant_id = request.POST.get("constant_id")
+        new_value = request.POST.get("new_value")
 
-    # Merge the constants and descriptions dataframes into a single list of dictionaries for easier rendering
-    merged_constants = []
-    for _, row in constants_df.iterrows():
-        # Get the description for the constant
-        description = descriptions_df[descriptions_df['dbConstName'] == row['dbConstName']]['dbConstDescript'].values
-        
-        # If description exists, get the first value, otherwise set to an empty string
-        description_value = description[0] if len(description) > 0 else ""
-
-        # Add the merged data to the list as a dictionary
-        merged_constants.append({
-            'dbFinYear': row['dbFinYear'],
-            'dbConstName': row['dbConstName'],
-            'dbConstDescript': description_value,
-            'dbProvCode': row['dbProvCode'],
-            'dbConstValue': row['dbConstValue']
-        })
-
-    # Render the template with merged constants
-    return render(request, 'services/constants.html', {'constants': merged_constants})
+        try:
+            constant = Constant.objects.get(id=constant_id)
+            constant.value = new_value
+            constant.save()
+            return JsonResponse({"success": True})
+        except Constant.DoesNotExist:
+            return JsonResponse({"success": False, "message": "Constant not found."})
+        except Exception as e:
+            return JsonResponse({"success": False, "message": str(e)})
+    return JsonResponse({"success": False, "message": "Invalid request method."})
 
 
 def fee_calculator(request):

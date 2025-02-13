@@ -1,23 +1,117 @@
-<!-- templates/services/compliance_management.html -->
 {% extends 'dashboard/base_dashboard.html' %}
 {% load static %}
 
 {% block title %}Compliance Management{% endblock %}
 
 {% block content %}
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+    .section-header {
+        background: linear-gradient(to right, #0077b6, #0096c7);
+        color: white;
+        padding: 15px;
+        border-radius: 8px 8px 0 0;
+        font-weight: 700;
+    }
+    .list-item {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+        transition: background 0.3s ease-in-out;
+    }
+    .list-item:hover {
+        background: #f1f5f9;
+    }
+    .list-icon {
+        font-size: 20px;
+        color: #0096c7;
+        margin-right: 12px;
+    }
+    .dark-mode .list-item:hover {
+        background: #1e293b;
+    }
+</style>
+
 <div class="container mx-auto px-6 py-8">
-    <h1 class="text-4xl font-bold mb-6 text-center text-gray-800">Compliance Management</h1>
-    <p class="text-lg mb-6 text-center text-gray-600">
-        Stay up-to-date with local and international transport regulations.
+    <h1 class="text-4xl font-extrabold mb-6 text-center text-gray-900 dark:text-white">🚛 Compliance Management</h1>
+    <p class="text-lg mb-6 text-center text-gray-600 dark:text-gray-300">
+        Stay up-to-date with <strong>South African transport regulations</strong> and ensure full compliance.
     </p>
-    <div class="bg-white rounded-lg shadow-md p-6">
-        <h2 class="text-2xl font-semibold mb-4">Compliance Checklist</h2>
-        <ul class="list-disc pl-5">
-            <li>Ensure all permits are up-to-date.</li>
-            <li>Adhere to load size and weight restrictions.</li>
-            <li>Comply with road safety and traffic regulations.</li>
-            <li>Maintain accurate records for auditing purposes.</li>
-        </ul>
+
+    <!-- Compliance Sections -->
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+        <h2 class="section-header text-center">📋 Compliance Checklist</h2>
+
+        <div x-data="{ openSection: null }" class="space-y-4 p-6">
+            
+            <!-- Permit Regulations -->
+            <div class="rounded-lg shadow-sm hover:shadow-lg transition">
+                <button @click="openSection === 1 ? openSection = null : openSection = 1"
+                        class="w-full flex justify-between items-center p-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg">
+                    📜 Permit Regulations
+                    <span x-text="openSection === 1 ? '-' : '+'"></span>
+                </button>
+                <div x-show="openSection === 1" x-collapse class="p-4 bg-blue-100 dark:bg-blue-900 text-gray-800 dark:text-gray-200">
+                    <div class="list-item"><span class="list-icon">✅</span> Ensure all <strong>Abnormal Load Permits</strong> are approved by the Department of Transport.</div>
+                    <div class="list-item"><span class="list-icon">📖</span> Follow <strong>TRH11 & NRTA Guidelines</strong> for oversized vehicle permits.</div>
+                    <div class="list-item"><span class="list-icon">🛣️</span> Verify <em>route approvals & bridge clearances</em> before transport.</div>
+                </div>
+            </div>
+
+            <!-- Load Size & Weight Restrictions -->
+            <div class="rounded-lg shadow-sm hover:shadow-lg transition">
+                <button @click="openSection === 2 ? openSection = null : openSection = 2"
+                        class="w-full flex justify-between items-center p-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-lg">
+                    ⚖️ Load Size & Weight Restrictions
+                    <span x-text="openSection === 2 ? '-' : '+'"></span>
+                </button>
+                <div x-show="openSection === 2" x-collapse class="p-4 bg-green-100 dark:bg-green-900 text-gray-800 dark:text-gray-200">
+                    <div class="list-item"><span class="list-icon">📏</span> Comply with <strong>SANRAL & municipal road weight limits</strong>.</div>
+                    <div class="list-item"><span class="list-icon">🚛</span> Ensure <strong>Gross Vehicle Mass (GVM)</strong> is within legal limits.</div>
+                    <div class="list-item"><span class="list-icon">⚖️</span> Use <strong>weighbridges</strong> to confirm compliance.</div>
+                </div>
+            </div>
+
+            <!-- Road Safety & Traffic Compliance -->
+            <div class="rounded-lg shadow-sm hover:shadow-lg transition">
+                <button @click="openSection === 3 ? openSection = null : openSection = 3"
+                        class="w-full flex justify-between items-center p-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-lg">
+                    🚦 Road Safety & Traffic Compliance
+                    <span x-text="openSection === 3 ? '-' : '+'"></span>
+                </button>
+                <div x-show="openSection === 3" x-collapse class="p-4 bg-yellow-100 dark:bg-yellow-900 text-gray-800 dark:text-gray-200">
+                    <div class="list-item"><span class="list-icon">🚦</span> Follow <strong>speed limits</strong> for different vehicle classes.</div>
+                    <div class="list-item"><span class="list-icon">🚓</span> Use <strong>escort vehicles</strong> where required for abnormal loads.</div>
+                    <div class="list-item"><span class="list-icon">📜</span> Ensure all vehicles have <strong>valid roadworthy certificates</strong>.</div>
+                </div>
+            </div>
+
+            <!-- Auditing & Record-Keeping -->
+            <div class="rounded-lg shadow-sm hover:shadow-lg transition">
+                <button @click="openSection === 4 ? openSection = null : openSection = 4"
+                        class="w-full flex justify-between items-center p-4 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded-lg">
+                    📑 Auditing & Record-Keeping
+                    <span x-text="openSection === 4 ? '-' : '+'"></span>
+                </button>
+                <div x-show="openSection === 4" x-collapse class="p-4 bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+                    <div class="list-item"><span class="list-icon">🧾</span> Maintain <strong> SARS-compliant invoicing & customs clearance records</strong>.</div>
+                    <div class="list-item"><span class="list-icon">📜</span> Ensure <strong> all compliance certificates</strong> are accessible.</div>
+                    <div class="list-item"><span class="list-icon">📝</span> Keep <strong> detailed transport logs</strong> for inspections.</div>
+                </div>
+            </div>
+
+        </div>
     </div>
+
 </div>
+
+{% block extra_js %}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+{% endblock %}
 {% endblock %}

@@ -16,5 +16,7 @@ urlpatterns = [
     path('av-number/', views.av_number_view, name='av-number'),
     path('account/', views.account_view, name='account'), 
     path('constants/', views.constants_view, name='constants'),  
+    path('update-constant-value/', views.update_constant_value, name='update_constant_value'),
     path('generate-pdf/', views.generate_pdf, name='generate_pdf'),
+    path('subscription/', views.subscription_view, name='subscription'),
 ]

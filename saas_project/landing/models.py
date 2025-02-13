@@ -28,3 +28,14 @@ class AxleLoadData(models.Model):
 
     def __str__(self):
         return f"Permit for {self.axle_unit} - {self.total_mass} kg"
+    
+
+class Constant(models.Model):
+    id = models.BigIntegerField(primary_key=True)
+    dbfinyear = models.IntegerField()  # Financial Year
+    dbconstname = models.CharField(max_length=100)  # Constant Name
+    dbprovcode = models.CharField(max_length=10)  # Province Code
+    dbconstvalue = models.FloatField()  # Editable Value
+
+    def __str__(self):
+        return f"{self.dbConstName} - {self.dbConstValue}"    

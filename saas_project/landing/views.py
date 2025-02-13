@@ -187,7 +187,7 @@ def safe_float_conversion(value, default=0.0):
 
 def constants_view(request):
     constants_list = Constant.objects.all().order_by('id')
-    paginator = Paginator(constants_list, 25)  # Show 25 rows per page
+    paginator = Paginator(constants_list, 200)  # Show 25 rows per page
     page_number = request.GET.get('page')
     constants = paginator.get_page(page_number)
     return render(request, 'services/constants.html', {'constants': constants})

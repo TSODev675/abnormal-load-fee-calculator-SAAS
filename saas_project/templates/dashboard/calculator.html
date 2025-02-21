@@ -93,34 +93,38 @@
 
                 <!-- Step 1: Load Details -->
                 <div x-show="step === 1">
-                    <h2 class="text-2xl font-semibold mb-4">📦 Load Information</h2>
+                    <h2 class="text-2xl font-semibold mb-4">🚗 Vehicle Details(Axle/Axle Groups)</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label>Axle Unit</label>
-                            <select class="w-full p-2 border border-gray-300 rounded-md">
+                            <select name="axle_unit" class="w-full p-2 border border-gray-300 rounded-md">
                                 <option value="TF">TF</option>
-                    <option value="TR">TR</option>
-                    <option value="DO">DO</option>
-                    <option value="ST">ST</option>
-                    <option value="C1">C1</option>
-                    <option value="C2">C2</option>
+                                <option value="TR">TR</option>
+                                <option value="DO">DO</option>
+                                <option value="ST">ST</option>
+                                <option value="C1">C1</option>
+                                <option value="C2">C2</option>
                             </select>
                         </div>
                         <div>
                             <label>Allowable Mass (kg)</label>
-                            <input type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="number" name="allowable_mass"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
                             <label>Actual Mass (kg)</label>
-                            <input type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="number" name="actual_mass"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
                             <label>No of Axles</label>
-                            <input type="number" class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="number" name="no_of_axles"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
                             <label for="axle_type" class="block text-gray-700">Axle Type</label>
-                            <select id="axle_type" name="axle_type" class="w-full p-2 border border-gray-300 rounded-md">
+                            <select id="axle_type" name="axle_type"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                                 <option>Select Axle Type</option>
                                 <option value="Single">Single</option>
                                 <option value="Dual">Dual</option>
@@ -132,11 +136,13 @@
                         </div>
                         <div>
                             <label for="w_spc_a" class="block text-gray-700">W-Spc A (mm)</label>
-                            <input type="number" id="w_spc_a" name="w_spc_a" class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="number" id="w_spc_a" name="w_spc_a"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
                             <label for="w_spc_b" class="block text-gray-700">W-Spc B (mm)</label>
-                            <input type="number" id="w_spc_b" name="w_spc_b" class="w-full p-2 border border-gray-300 rounded-md">
+                            <input type="number" id="w_spc_b" name="w_spc_b"
+                                class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
                             <label for="type_pressure" class="block text-gray-700">Tyre Pressure (kPa)</label>
@@ -148,7 +154,7 @@
 
                 <!-- Step 2: Vehicle Information -->
                 <div x-show="step === 2">
-                    <h2 class="text-2xl font-semibold mb-4">🚗 Vehicle Details</h2>
+                    <h2 class="text-2xl font-semibold mb-4">📦 Load Information</h2>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="total_mass" class="block text-gray-700">Total Actual Mass (kg)</label>
@@ -194,7 +200,8 @@
                                 class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
                         <div>
-                            <label for="no_of_escorts" class="block text-gray-700">No. of Traffic Officer Escorts</label>
+                            <label for="no_of_escorts" class="block text-gray-700">No. of Traffic Officer
+                                Escorts</label>
                             <input type="number" id="no_of_escorts" name="no_of_escorts"
                                 class="w-full p-2 border border-gray-300 rounded-md">
                         </div>
@@ -241,11 +248,55 @@
 
                 <!-- Step 4: Fee Breakdown & Submission -->
                 <div x-show="step === 4">
-                    <h2 class="text-2xl font-semibold mb-4">💰 Fee Breakdown</h2>
-                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg shadow-md">
-                        <p>🚛 Mass Tariff: R500</p>
-                        <p>🛣 Damage Fee: R300</p>
-                        <p class="font-bold text-lg">💵 Total: <span x-text="totalFee"></span></p>
+                    <h2 class="text-2xl font-semibold mb-4 text-center">💰 Calculated Fee Breakdown</h2>
+
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-md">
+                        <table class="w-full border-collapse border border-yellow-400 bg-yellow-50">
+                            <tr class="bg-yellow-300 text-blue-900 font-bold text-lg">
+                                <th colspan="3" class="p-2">Calculated Fee</th>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Admin Fee</td>
+                                <td class="p-2 text-right font-semibold">R<span x-text="adminFee"></span></td>
+                                <td class="p-2 text-gray-500">(Basic)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Mass Fee</td>
+                                <td class="p-2 text-right">R<span x-text="massFee"></span></td>
+                                <td class="p-2 text-gray-500">cent/km</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Width Fee</td>
+                                <td class="p-2 text-right">R<span x-text="widthFee"></span></td>
+                                <td class="p-2 text-gray-500">cent/km</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Length Fee</td>
+                                <td class="p-2 text-right">R<span x-text="lengthFee"></span></td>
+                                <td class="p-2 text-gray-500">cent/km</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Escort Fee</td>
+                                <td class="p-2 text-right">R<span x-text="escortFee"></span></td>
+                                <td class="p-2 text-gray-500">(None)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Fax Fee</td>
+                                <td class="p-2 text-right">R<span x-text="faxFee"></span></td>
+                                <td class="p-2 text-gray-500">(None)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-2 font-semibold text-blue-900">Extra Fee</td>
+                                <td class="p-2 text-right">R<span x-text="extraFee"></span></td>
+                                <td class="p-2 text-gray-500">(None)</td>
+                            </tr>
+                            <tr class="bg-gray-300 font-bold text-lg">
+                                <td class="p-2 text-blue-900">Total Fee</td>
+                                <td class="p-2 text-right text-xl text-black bg-gray-400">R<span
+                                        x-text="totalFee"></span></td>
+                                <td></td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
 
@@ -261,29 +312,57 @@
                     </button>
 
                     <!-- Print Button -->
-            <button type="button" x-show="step === 4" onclick="openPrintPopup()"
-                class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
-                Print
-            </button>
+                    <button type="button" x-show="step === 4" onclick="openPrintPopup()"
+                        class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                        Print Quote
+                    </button>
+
                     <button type="submit" x-show="step === 4"
                         class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition">
                         ✅ Submit
                     </button>
                 </div>
-                <div id="printPopup" class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+
+                <!-- Print Popup -->
+                <div id="printPopup"
+                    class="hidden fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
-                        <h2 class="text-2xl font-bold mb-4">Permit Summary</h2>
+                        <h2 class="text-2xl font-bold mb-4">Permit Quote Summary</h2>
                         <div id="printContent">
-                            <p><strong>Axle Unit:</strong> <span id="print_axle_unit"></span></p>
-                            <p><strong>Allowable Mass:</strong> <span id="print_allowable_mass"></span> kg</p>
-                            <p><strong>Actual Mass:</strong> <span id="print_actual_mass"></span> kg</p>
-                            <p><strong>Total Fee:</strong> R<span id="print_total_fee"></span></p>
+                            <table class="w-full border-collapse border border-gray-300">
+                                <tr class="bg-gray-200">
+                                    <td class="p-2 font-semibold">Admin Fee:</td>
+                                    <td class="p-2">R<span id="print_admin_fee"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-semibold">Mass Fee:</td>
+                                    <td class="p-2">R<span id="print_mass_fee"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-semibold">Width Fee:</td>
+                                    <td class="p-2">R<span id="print_width_fee"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-semibold">Length Fee:</td>
+                                    <td class="p-2">R<span id="print_length_fee"></span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-semibold">Escort Fee:</td>
+                                    <td class="p-2">R<span id="print_escort_fee"></span></td>
+                                </tr>
+                                <tr class="bg-gray-300 font-bold">
+                                    <td class="p-2">Total Fee:</td>
+                                    <td class="p-2 text-black">R<span id="print_total_fee"></span></td>
+                                </tr>
+                            </table>
                         </div>
                         <div class="mt-4 flex justify-end">
-                            <button onclick="printPage()" class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
+                            <button onclick="printPage()"
+                                class="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600">
                                 Print
                             </button>
-                            <button onclick="closePrintPopup()" class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 ml-4">
+                            <button onclick="closePrintPopup()"
+                                class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 ml-4">
                                 Close
                             </button>
                         </div>
@@ -296,11 +375,12 @@
 
 <script>
     function openPrintPopup() {
-        document.getElementById('print_axle_unit').innerText = document.getElementById('axle_unit').value;
-        document.getElementById('print_allowable_mass').innerText = document.getElementById('allowable_mass').value;
-        document.getElementById('print_actual_mass').innerText = document.getElementById('actual_mass').value;
-        document.getElementById('print_total_fee').innerText = "{{ total_fee }}";
-
+        document.getElementById('print_admin_fee').innerText = document.querySelector("[x-text='adminFee']").innerText;
+        document.getElementById('print_mass_fee').innerText = document.querySelector("[x-text='massFee']").innerText;
+        document.getElementById('print_width_fee').innerText = document.querySelector("[x-text='widthFee']").innerText;
+        document.getElementById('print_length_fee').innerText = document.querySelector("[x-text='lengthFee']").innerText;
+        document.getElementById('print_escort_fee').innerText = document.querySelector("[x-text='escortFee']").innerText;
+        document.getElementById('print_total_fee').innerText = document.querySelector("[x-text='totalFee']").innerText;
         document.getElementById('printPopup').classList.remove('hidden');
     }
 
@@ -315,14 +395,71 @@
         window.print();
         document.body.innerHTML = originalContent;
     }
-    function calculateFee() {
-        const baseFee = 500;
-        const damageFee = 300;
-        const totalFee = baseFee + damageFee;
-        document.querySelector("[x-text='totalFee']").innerText = `R${totalFee}`;
-    }
 
-    document.addEventListener("DOMContentLoaded", calculateFee);
+    document.addEventListener("DOMContentLoaded", function () {
+        function calculateFee() {
+            // Get user input values
+            let adminFee = document.getElementById("engineer_fee").checked ? 810 : 300;
+            let totalMass = parseFloat(document.getElementById("total_mass").value) || 0;
+            let noOfAxles = parseFloat(document.getElementById("no_of_axles").value) || 1;
+            let wSpcA = parseFloat(document.getElementById("w_spc_a").value) || 0;
+            let typePressure = parseFloat(document.getElementById("type_pressure").value) || 0;
+            let province = document.getElementById("province").value;
+            let axleType = document.getElementById("axle_type").value;
+            let totalDistance = parseFloat(document.getElementById("total_distance").value) || 0;
+            let ladenWidth = parseFloat(document.getElementById("laden_width").value) || 0;
+            let ladenLength = parseFloat(document.getElementById("laden_length").value) || 0;
+            let ladenHeight = parseFloat(document.getElementById("laden_height").value) || 0;
+            let numEscorts = parseFloat(document.getElementById("no_of_escorts").value) || 0;
+            let wheelTrack = parseFloat(document.getElementById("wheel_track").value) || 0;
+            let weekend = document.getElementById("weekend_travel").checked;
+
+            // Call backend API to get calculated values dynamically
+            fetch("/calculate_fees/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: JSON.stringify({
+                    total_mass: totalMass,
+                    no_of_axles: noOfAxles,
+                    w_spc_a: wSpcA,
+                    type_pressure: typePressure,
+                    province: province,
+                    axle_type: axleType,
+                    total_distance: totalDistance,
+                    laden_width: ladenWidth,
+                    laden_length: ladenLength,
+                    laden_height: ladenHeight,
+                    num_escorts: numEscorts,
+                    wheel_track: wheelTrack,
+                    weekend: weekend,
+                    engineer_fee: document.getElementById("engineer_fee").checked
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Update the breakdown values dynamically
+                document.querySelector("[x-text='adminFee']").innerText = data.admin_fee;
+                document.querySelector("[x-text='massFee']").innerText = data.mass_fee;
+                document.querySelector("[x-text='widthFee']").innerText = data.width_fee;
+                document.querySelector("[x-text='lengthFee']").innerText = data.length_fee;
+                document.querySelector("[x-text='escortFee']").innerText = data.escort_fee;
+                document.querySelector("[x-text='totalFee']").innerText = data.total_fee;
+            })
+            .catch(error => console.error("Error calculating fees:", error));
+        }
+
+        // Attach event listeners to trigger calculation on form changes
+        document.querySelectorAll("input, select").forEach(element => {
+            element.addEventListener("change", calculateFee);
+        });
+
+        // Run calculation once on load
+        calculateFee();
+    });
 </script>
+
 
 {% endblock %}

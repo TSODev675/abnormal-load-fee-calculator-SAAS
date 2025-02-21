@@ -5,6 +5,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     #path('calculator/', views.calculator_view, name='calculator'),
     path('calculator/', views.fee_calculator, name='calculator'),
+    path("calculate_fees/", views.calculate_fees, name="calculate_fees"),
     path('profile/', views.profile_view, name='profile'),
     path('dashboard/', views.dashboard_view, name='dashboard'),
     path('route-optimization/', views.route_optimization_view, name='route-optimization'),
@@ -19,4 +20,6 @@ urlpatterns = [
     path('update-constant-value/', views.update_constant_value, name='update_constant_value'),
     path('generate-pdf/', views.generate_pdf, name='generate_pdf'),
     path('subscription/', views.subscription_view, name='subscription'),
+    path('login/', views.login_view, name='login'),
+    path('signup/', views.signup_view, name='signup'),
 ]

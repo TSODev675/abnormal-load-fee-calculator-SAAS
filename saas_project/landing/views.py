@@ -1,16 +1,20 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, redirect
 import requests
 from django.http import JsonResponse, HttpResponse
-from django.conf import settings
 from .models import AxleLoadData
-from .models import Constant  
-from .calculations import calculate_fees
+from .models import Constant
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
-import pandas as pd
-import os
 from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
+from django.contrib import messages
+from .calculations import (
+    calculate_mass_fee,
+    calculate_administrative_fee,
+    calculate_road_usage_fee,
+    calculate_escort_fee,
+    calculate_total_permit_fee,
+)
 
 # Coordinates for each province in South Africa and Namibia
 COUNTRY_PROVINCES_COORDINATES = {
@@ -67,6 +71,9 @@ def index(request):
 
 # View for the dashboard page displaying services
 def dashboard_view(request):
+    """
+    Displays the dashboard page with an overview of services.
+    """
     services = [
         {'title': 'Route Optimization', 'description': 'Efficiently plan your routes considering road restrictions and regulations.', 'icon': 'fas fa-route', 'url': 'route-optimization'},
         {'title': 'Compliance Management', 'description': 'Stay up-to-date with local and international transport regulations.', 'icon': 'fas fa-clipboard-check', 'url': 'compliance-management'},
@@ -160,8 +167,16 @@ def constants_view(request):
 
 
 def subscription_view(request):
+    """
+    Displays the subscription page with the selected pricing plan.
+    """
     selected_plan = request.GET.get('plan', 'Basic')  # Default to 'Basic' if no plan is selected
     payment_methods = ['Visa/Mastercard', 'EFT', 'Apple Pay', 'Google Pay']
+
+    if request.method =="POST":
+        # Simulate subscription logic (No actual payment processing)
+        messages.success(request, f"You are now subscribed to {selected_plan}!")
+        return redirect('/dashboard/')     # Redirect to dashboard after subscribing
 
     context = {
         'selected_plan': selected_plan,
@@ -210,47 +225,66 @@ def update_constant_value(request):
             return JsonResponse({"success": False, "message": str(e)})
     return JsonResponse({"success": False, "message": "Invalid request method."})
 
-
 def fee_calculator(request):
-    calculated_fees = {'mass_tariff': 0, 'damage': 0, 'total_fee': 0}  # Initialize default values
+    """
+    Handles the permit fee calculation form submission and displays the results.
+    """
+    calculated_fees = {'mass_tariff': 0, 'damage': 0, 'total_fee': 0}  # Default values
 
     if request.method == "POST":
-        form_data = {
-            'axle_unit': request.POST.get('axle_unit', '')[:5].strip(),  # Truncate to 5 chars
-            'allowable_mass': float(request.POST.get('allowable_mass', 0)),
-            'actual_mass': float(request.POST.get('actual_mass', 0)),
-            'no_of_axles': int(request.POST.get('no_of_axles', 0)),
-            'axle_type': request.POST.get('axle_type', '')[:20].strip(),  # Truncate to 20 chars
-            'w_spc_a': float(request.POST.get('w_spc_a', 0)),
-            'w_spc_b': float(request.POST.get('w_spc_b', 0)),
-            'type_pressure': float(request.POST.get('type_pressure', 0)),
-            'total_mass': float(request.POST.get('total_mass', 0)),
-            'wheel_track': float(request.POST.get('wheel_track', 0)),
-            'av_no': request.POST.get('av_no', '')[:10].strip(),  # Truncate to 10 chars
-            'laden_length': float(request.POST.get('laden_length', 0)),
-            'laden_width': float(request.POST.get('laden_width', 0)),
-            'laden_height': float(request.POST.get('laden_height', 0)),
-            'total_distance': float(request.POST.get('total_distance', 0)),
-            'distance_escorted': float(request.POST.get('distance_escorted', 0)),
-            'no_of_escorts': int(request.POST.get('no_of_escorts', 0)),
-            'rural_speed': float(request.POST.get('rural_speed', 0)),
-            'engineer_fee': request.POST.get('engineer_fee') == 'on',
-            'weekend_travel': request.POST.get('weekend_travel') == 'on',
-            'mobile_crane': request.POST.get('mobile_crane') == 'on',
-            'province': request.POST.get('province', '')[:2].strip(),  # Truncate to 2 chars
-        }
+        try:
+            # Extract form data
+            form_data = {
+                'axle_unit': request.POST.get('axle_unit', '')[:5].strip(),
+                'allowable_mass': float(request.POST.get('allowable_mass', 0) or 0),
+                'actual_mass': float(request.POST.get('actual_mass', 0) or 0),
+                'no_of_axles': int(request.POST.get('no_of_axles', 0) or 0),
+                'axle_type': request.POST.get('axle_type', '')[:20].strip(),
+                'w_spc_a': float(request.POST.get('w_spc_a', 0) or 0),
+                'w_spc_b': float(request.POST.get('w_spc_b', 0) or 0),
+                'type_pressure': float(request.POST.get('type_pressure', 0) or 0),
+                'total_mass': float(request.POST.get('total_mass', 0) or 0),
+                'wheel_track': float(request.POST.get('wheel_track', 0) or 0),
+                'av_no': request.POST.get('av_no', '')[:10].strip(),
+                'laden_length': float(request.POST.get('laden_length', 0) or 0),
+                'laden_width': float(request.POST.get('laden_width', 0) or 0),
+                'laden_height': float(request.POST.get('laden_height', 0) or 0),
+                'total_distance': float(request.POST.get('total_distance', 0) or 0),
+                'distance_escorted': float(request.POST.get('distance_escorted', 0) or 0),
+                'no_of_escorts': int(request.POST.get('no_of_escorts', 0) or 0),
+                'rural_speed': float(request.POST.get('rural_speed', 0) or 0),
+                'engineer_fee': request.POST.get('engineer_fee') == 'on',
+                'weekend_travel': request.POST.get('weekend_travel') == 'on',
+                'mobile_crane': request.POST.get('mobile_crane') == 'on',
+                'province': request.POST.get('province', '')[:2].strip(),
+            }
 
-         # Save the data and calculated fee in the database
-        calculated_fees = calculate_fees(form_data)
+            # Calculate total permit fee
+            total_fee = calculate_total_permit_fee(form_data)
 
-        AxleLoadData.objects.create(**form_data, calculated_fee=calculated_fees['total_fee'])
+            # Store calculated values
+            calculated_fees = {
+                'mass_tariff': calculate_mass_fee(form_data),
+                'damage': calculate_road_usage_fee(form_data['laden_width'], form_data['laden_length'], form_data['total_distance']),
+                'total_fee': total_fee
+            }
+
+            # Save data to the database
+            AxleLoadData.objects.create(**form_data, calculated_fee=total_fee)
+
+        except ValueError as e:
+            return render(request, 'dashboard/calculator.html', {
+                'error_message': f"Invalid input detected: {str(e)}",
+                'mass_tariff': calculated_fees['mass_tariff'],
+                'damage': calculated_fees['damage'],
+                'total_fee': calculated_fees['total_fee']
+            })
 
     return render(request, 'dashboard/calculator.html', {
         'mass_tariff': calculated_fees['mass_tariff'],
         'damage': calculated_fees['damage'],
         'total_fee': calculated_fees['total_fee']
     })
-
 
 def generate_pdf(request):
     response = HttpResponse(content_type='application/pdf')
@@ -292,3 +326,64 @@ def generate_pdf(request):
     c.save()
     
     return response
+
+def login_view(request):
+    """
+    Handles login form submission and redirects users to the subscription page.
+    """
+    selected_plan = request.GET.get('plan', 'Basic')  # Get the selected plan from URL, Basic if no plan is selected
+
+    if request.method == "POST":
+        # Simulate login logic (No actual authentication)
+        return redirect(f'/subscription/?plan={selected_plan}')  # Redirect to subscription
+
+    return render(request, 'auth/login.html', {'selected_plan': selected_plan})
+
+def signup_view(request):
+    """
+    Handles user signup and redirects them to the subscription page.
+    """
+    selected_plan = request.GET.get('plan', 'Basic')  # Get selected plan from URL
+
+    if request.method == "POST":
+        # Simulate signup logic (No actual user creation)
+        return redirect(f'/subscription/?plan={selected_plan}')  # Redirect to subscription
+
+    return render(request, 'auth/signup.html', {'selected_plan': selected_plan})
+
+from django.http import JsonResponse
+from .calculations import calculate_total_permit_fee
+
+def calculate_fees(request):
+    """
+    Handles AJAX requests to dynamically calculate permit fees.
+    """
+    if request.method == "POST":
+        import json
+        data = json.loads(request.body)
+
+        total_fee = calculate_total_permit_fee(
+            total_mass=data["total_mass"],
+            no_of_axles=data["no_of_axles"],
+            w_spc_a=data["w_spc_a"],
+            type_pressure=data["type_pressure"],
+            province=data["province"],
+            axle_type=data["axle_type"],
+            total_distance=data["total_distance"],
+            laden_width=data["laden_width"],
+            laden_length=data["laden_length"],
+            laden_height=data["laden_height"],
+            num_escorts=data["num_escorts"],
+            wheel_track=data["wheel_track"],
+            weekend=data["weekend"],
+            engineer_input=data["engineer_fee"]
+        )
+
+        return JsonResponse({
+            "admin_fee": 810 if data["engineer_fee"] else 300,
+            "mass_fee": 0 if data["total_mass"] < 56000 else round(total_fee * 0.3, 2),
+            "width_fee": round(total_fee * 0.2, 2),
+            "length_fee": round(total_fee * 0.1, 2),
+            "escort_fee": round(total_fee * 0.4, 2),
+            "total_fee": round(total_fee, 2)
+        })

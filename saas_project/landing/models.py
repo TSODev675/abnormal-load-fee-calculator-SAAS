@@ -24,11 +24,17 @@ class AxleLoadData(models.Model):
     mobile_crane = models.BooleanField(default=False)
     province = models.CharField(max_length=2)
     calculated_fee = models.FloatField(null=True, blank=True)
+
+    # ✅ Added fields for calculations
+    mass_tariff = models.FloatField(default=0)
+    damage = models.FloatField(default=0)
+    total_fee = models.FloatField(default=0)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Permit for {self.axle_unit} - {self.total_mass} kg"
-    
+
 
 class Constant(models.Model):
     id = models.BigIntegerField(primary_key=True)

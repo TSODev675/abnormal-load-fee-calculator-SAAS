@@ -32,8 +32,8 @@ SECRET_KEY = "django-insecure-s!vycz20c#rmszv^s$(kqola5bm!41elna5#0n)b2)#w@xf^pz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+#ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['102.37.214.250', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -88,17 +88,28 @@ WSGI_APPLICATION = "saas_project.wsgi.application"
 #     }
 # }
 
+#DATABASES = {
+ #   'default': {
+  #      'ENGINE': 'django.db.backends.postgresql',
+   #     'NAME': 'avfee_calc',
+    #    'USER': 'postgres',
+     #   'PASSWORD': 'admin',
+      #  'HOST': 'localhost', 
+       # 'PORT': '5432',
+    #}
+#}
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'avfee_calc',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost', 
+        'NAME': 'abnormal_load_db',
+        'USER': 'abnormal_user',
+        'PASSWORD': '@dm!n123',
+        'HOST': 'localhost',
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

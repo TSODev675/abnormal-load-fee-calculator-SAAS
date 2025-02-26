@@ -1,0 +1,30 @@
+name: Deploy Django App to Azure Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main  # Runs this workflow when changes are pushed to 'main'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy to Azure Server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: 102.37.214.250
+          username: tmalima
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/abnormal-load-fee-calculator-SAAS
+            git pull origin main
+            source ~/abnormal-load-fee-calculator-SAAS/venv/bin/activate
+            pip install -r requirements.txt
+            python manage.py migrate
+            python manage.py collectstatic --noinput
+            sudo systemctl restart gunicorn
+            sudo systemctl restart nginx

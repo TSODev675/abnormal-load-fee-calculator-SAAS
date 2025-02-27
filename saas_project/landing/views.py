@@ -375,8 +375,7 @@ def calculate_fees(request):
             laden_height=data["laden_height"],
             num_escorts=data["num_escorts"],
             wheel_track=data["wheel_track"],
-            weekend=data["weekend"],
-            engineer_input=data["engineer_fee"]
+            engineer_input=data.get("engineer_fee",300)
         )
 
         return JsonResponse({

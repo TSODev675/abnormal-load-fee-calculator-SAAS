@@ -61,14 +61,14 @@
 </head>
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <!-- Navbar -->
-    <nav class="bg-gray-800 text-white px-4 py-3">
+    <nav class="bg-gray-900 text-white px-4 py-3">
         <div class="flex justify-between items-center">
             <div>
-                <a href="/" class="text-2xl font-bold">Abnormal Load</a>
+                <a href="/" class="text-2xl font-bold">Abnormal Loads</a>
             </div>
             <!-- User Login and Icon -->
             <div class="flex items-center space-x-4">
-                <span>Welcome, Thendo Malima</span>
+                <span>Welcome, User</span>
                 <a href="{% url 'profile' %}">
                     <i class="fas fa-user-circle text-2xl"></i>
                 </a>
@@ -79,7 +79,7 @@
     <!-- Sidebar and Content Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar" class="bg-gray-800 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
+        <div id="sidebar" class="bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
             <!-- Sidebar Header with Toggle Button -->
             <div>
                 <div class="flex justify-between items-center p-4">
@@ -131,7 +131,7 @@
 
             <!-- Sidebar Logout Button (Stick to Bottom) -->
             <div class="px-2 py-4 mb-16">
-                <button class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
+                <button onclick="logoutUser()" class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="ml-2 sidebar-text">Logout</span>
                 </button>
@@ -175,6 +175,20 @@
             });
             sidebarTitle.classList.toggle('hidden');
         });
+
+        function logoutUser() {
+        fetch("{% url 'logout' %}", { 
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "/"; // Redirect to index page
+            }
+        }).catch(error => console.error("Logout failed:", error));
+    }
     </script>
 
     <script src="{% static 'js/main.js' %}"></script>

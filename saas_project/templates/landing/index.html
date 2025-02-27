@@ -21,16 +21,49 @@
 </script>
 
 <!-- Hero Section -->
-<section id="hero" class="bg-blue-600 text-white py-20 transition-opacity duration-500 ease-in-out">
-    <div class="container mx-auto px-6 text-center">
-        <h1 class="text-5xl font-bold mb-4 animate-fade-in">Revolutionize Your Abnormal Load Transport</h1>
-        <p class="text-xl mb-8 animate-fade-in">Streamline operations, ensure compliance, and optimize routes with our
-            cutting-edge platform.</p>
-        <a href="{% url 'dashboard' %}"
-            class="bg-blue-600 text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-blue-700 hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105">Get
-            Started</a>
+<section id="hero" class="bg-blue-600 text-white py-32 relative overflow-hidden flex items-center justify-center min-h-[500px]">
+    <div class="container mx-auto px-6 relative z-10">
+        
+        <!-- CSIR Logo and Auth Buttons -->
+        <div class="flex justify-between items-center absolute top-40 left-6 right-6 opacity-9">
+            <!-- CSIR Logo -->
+            <img src="{% static 'images/Final_logo_white.png' %}" alt="CSIR Logo" class="h-16 w-auto opacity-0 animate-fade-in">
+
+            <!-- Auth Buttons -->
+            <div>
+                <a href="{% url 'login' %}"
+                    class="bg-[#0096C7] text-[#0A192F] px-4 py-2 rounded-full font-semibold text-lg hover:bg-gray-400 transition duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-md">
+                    Login
+                </a>
+                <a href="{% url 'signup' %}"
+                    class="bg-[#00B4D8] text-[#0A192F] px-4 py-2 rounded-full font-semibold text-lg hover:bg-green-500 transition duration-300 ease-in-out transform hover:scale-105 active:scale-95 ml-4 shadow-md">
+                    Sign Up
+                </a>
+            </div>
+        </div>
+
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 z-0 flex items-center justify-center">
+            <div class="w-96 h-96 bg-gradient-to-r from-blue-400 via-transparent to-transparent rounded-full opacity-30 animate-pulse"></div>
+        </div>
+
+        <!-- Hero Content -->
+        <div class="text-center relative z-10">
+            <h1 class="text-5xl font-bold mb-4 opacity-0 animate-slide-in">
+                Revolutionize Your Abnormal Load Transport
+            </h1>
+            <p class="text-xl mb-8 opacity-0 animate-fade-in-up delay-300">
+                Streamline operations, ensure compliance, and optimize routes with our cutting-edge platform.
+            </p>
+            <a href="#pricing"
+                class="bg-[#00B4D8] text-white px-6 py-3 rounded-full font-semibold text-lg hover:bg-blue-500 hover:shadow-lg transition-transform duration-300 ease-in-out transform hover:scale-105 active:scale-95 shadow-lg">
+                Get Started
+            </a>
+        </div>
     </div>
 </section>
+
+
 
 <!-- Features Section -->
 <section id="features" class="py-20 transition-opacity duration-500 ease-in-out">
@@ -50,48 +83,29 @@
 </section>
 
 <!-- Pricing Section -->
-<!--<section id="pricing" class="bg-gray-100 py-20 transition-opacity duration-500 ease-in-out"> 
+<section id="pricing" class="bg-gray-100 py-20 transition-opacity duration-3500 ease-in-out">
     <div class="container mx-auto px-6 text-center">
-        <h2 class="text-4xl font-bold mb-12">Pricing Plans</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
-            {% for plan in pricing_plans %}
-            <a href="{% url 'subscription' %}?plan={{ plan.name }}" class="block">
-                <div
-                    class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer">
-                    <h3 class="text-2xl font-semibold mb-2">{{ plan.name }}</h3>
-                    <p class="text-4xl font-bold text-blue-600 mb-4">R{{ plan.price }}/mo</p>
-                    <ul class="mb-6">
-                        {% for feature in plan.features %}
-                        <li class="text-gray-600 mb-2">{{ feature }}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="bg-blue-600 text-white px-4 py-2 rounded-md text-center hover:bg-blue-700">
-                        Choose Plan
-                    </div>
-                </div>
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-</section>-->
-
-<section id="pricing" class="bg-gray-100 py-20 transition-opacity duration-500 ease-in-out">
-    <div class="container mx-auto px-6 text-center">
-        <h2 class="text-4xl font-bold mb-12">Pricing Plans</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
+        <h2 class="text-4xl font-bold mb-12">Select Pricing Plans</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 animate-slide-in">
             {% for plan in pricing_plans %}
             <a href="{% url 'login' %}?plan={{ plan.name }}" class="block">
                 <div
-                    class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer">
+                    class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer flex flex-col h-full">
                     <h3 class="text-2xl font-semibold mb-2">{{ plan.name }}</h3>
                     <p class="text-4xl font-bold text-blue-600 mb-4">R{{ plan.price }}/mo</p>
-                    <ul class="mb-6">
+                    
+                    <!-- Features List (This section should take the remaining space) -->
+                    <ul class="mb-6 flex-grow">
                         {% for feature in plan.features %}
                         <li class="text-gray-600 mb-2">{{ feature }}</li>
                         {% endfor %}
                     </ul>
-                    <div class="bg-blue-600 text-white px-4 py-2 rounded-md text-center hover:bg-blue-700">
-                        Choose Plan
+
+                    <!-- Choose Plan Button (Always at the Bottom) -->
+                    <div class="mt-auto">
+                        <div class="bg-blue-600 text-white px-4 py-2 rounded-md text-center hover:bg-blue-700">
+                            Choose Plan
+                        </div>
                     </div>
                 </div>
             </a>
@@ -99,6 +113,7 @@
         </div>
     </div>
 </section>
+
 
 <!-- Testimonials Section -->
 <section id="testimonials" class="py-20 transition-opacity duration-500 ease-in-out">
@@ -108,7 +123,7 @@
             <!-- Testimonial 1 -->
             <div
                 class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
-                <p class="text-gray-600 mb-4">"AbnormalLoad has made our transport operations so much easier! We now
+                <p class="text-gray-600 mb-4">"Abnormal load system has made our transport operations so much easier! We now
                     plan our routes efficiently while staying compliant with regulations."</p>
                 <h4 class="text-lg font-semibold">John Doe, Logistics Manager</h4>
             </div>

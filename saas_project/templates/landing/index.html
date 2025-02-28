@@ -21,13 +21,15 @@
 </script>
 
 <!-- Hero Section -->
-<section id="hero" class="bg-blue-600 text-white py-32 relative overflow-hidden flex items-center justify-center min-h-[500px]">
+<section id="hero"
+    class="bg-blue-600 text-white py-32 relative overflow-hidden flex items-center justify-center min-h-[500px]">
     <div class="container mx-auto px-6 relative z-10">
-        
+
         <!-- CSIR Logo and Auth Buttons -->
         <div class="flex justify-between items-center absolute top-40 left-6 right-6 opacity-9">
             <!-- CSIR Logo -->
-            <img src="{% static 'images/Final_logo_white.png' %}" alt="CSIR Logo" class="h-16 w-auto opacity-0 animate-fade-in">
+            <img src="{% static 'images/Final_logo_white.png' %}" alt="CSIR Logo"
+                class="h-16 w-auto opacity-0 animate-fade-in">
 
             <!-- Auth Buttons -->
             <div>
@@ -44,7 +46,9 @@
 
         <!-- Animated Background Elements -->
         <div class="absolute inset-0 z-0 flex items-center justify-center">
-            <div class="w-96 h-96 bg-gradient-to-r from-blue-400 via-transparent to-transparent rounded-full opacity-30 animate-pulse"></div>
+            <div
+                class="w-96 h-96 bg-gradient-to-r from-blue-400 via-transparent to-transparent rounded-full opacity-30 animate-pulse">
+            </div>
         </div>
 
         <!-- Hero Content -->
@@ -63,16 +67,14 @@
     </div>
 </section>
 
-
-
 <!-- Features Section -->
 <section id="features" class="py-20 transition-opacity duration-500 ease-in-out">
     <div class="container mx-auto px-6 text-center">
         <h2 class="text-4xl font-bold mb-12">Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
             {% for feature in features %}
-            <div
-                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
+            <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+                onclick="openFeaturePopup('{{ feature.title }}', '{{ feature.description }}')">
                 <i class="{{ feature.icon }} text-blue-600 text-4xl mb-4"></i>
                 <h3 class="text-2xl font-semibold mb-2">{{ feature.title }}</h3>
                 <p class="text-gray-600">{{ feature.description }}</p>
@@ -81,6 +83,22 @@
         </div>
     </div>
 </section>
+
+<!-- Feature Popup Modal -->
+<div id="featurePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+    <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
+        <h2 id="featureTitle" class="text-2xl font-bold mb-4"></h2>
+        <p id="featureDescription" class="text-gray-600 mb-4"></p>
+        <audio id="ttsAudio" controls class="mx-auto mb-4 hidden"></audio>
+        <div class="mt-6">
+            <button onclick="playTTS()" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">🔊 Play
+                Voice</button>
+            <button onclick="closeFeaturePopup()"
+                class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 ml-2">Close</button>
+        </div>
+    </div>
+</div>
+
 
 <!-- Pricing Section -->
 <section id="pricing" class="bg-gray-100 py-20 transition-opacity duration-3500 ease-in-out">
@@ -93,7 +111,7 @@
                     class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer flex flex-col h-full">
                     <h3 class="text-2xl font-semibold mb-2">{{ plan.name }}</h3>
                     <p class="text-4xl font-bold text-blue-600 mb-4">R{{ plan.price }}/mo</p>
-                    
+
                     <!-- Features List (This section should take the remaining space) -->
                     <ul class="mb-6 flex-grow">
                         {% for feature in plan.features %}
@@ -123,7 +141,8 @@
             <!-- Testimonial 1 -->
             <div
                 class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out">
-                <p class="text-gray-600 mb-4">"Abnormal load system has made our transport operations so much easier! We now
+                <p class="text-gray-600 mb-4">"Abnormal load system has made our transport operations so much easier! We
+                    now
                     plan our routes efficiently while staying compliant with regulations."</p>
                 <h4 class="text-lg font-semibold">John Doe, Logistics Manager</h4>
             </div>
@@ -165,4 +184,34 @@
     </div>
 </section>
 
+{% endblock %}
+{% block extra_js %}
+<script>
+    function openFeaturePopup(title, description) {
+        document.getElementById("featureTitle").innerText = title;
+        document.getElementById("featureDescription").innerText = description;
+        document.getElementById("featurePopup").classList.remove("hidden");
+
+        // Generate TTS audio using Mozilla API
+        generateTTS(description);
+    }
+
+    function closeFeaturePopup() {
+        document.getElementById("featurePopup").classList.add("hidden");
+        document.getElementById("ttsAudio").classList.add("hidden");
+    }
+
+    function generateTTS(text) {
+        const ttsUrl = `https://tts.mozilla.org/api/tts?text=${encodeURIComponent(text)}&voice=en_US&model_id=mozilla-tts`;
+
+        // Set audio source
+        const audioElement = document.getElementById("ttsAudio");
+        audioElement.src = ttsUrl;
+        audioElement.classList.remove("hidden");
+    }
+
+    function playTTS() {
+        document.getElementById("ttsAudio").play();
+    }
+</script>
 {% endblock %}

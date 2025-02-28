@@ -1,10 +1,10 @@
-{% extends 'landing/base.html' %}
+{% extends 'landing/base_auth.html' %}
 {% load static %}
 
 {% block title %}Sign Up{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center min-h-screen bg-gray-100">
+<div class="flex items-center justify-center min-h-screen">
     <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <h2 class="text-3xl font-bold text-center mb-6">Create an Account</h2>
         <form action="{% url 'subscription' %}" method="GET">

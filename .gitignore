@@ -19,9 +19,6 @@ db.sqlite3
 # Ignore environment variables file
 .env
 
-# Virtual Env
-../myenv/
-
 # Ignore pipenv files
 Pipfile
 Pipfile.lock

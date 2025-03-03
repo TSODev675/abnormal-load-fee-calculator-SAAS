@@ -20,7 +20,7 @@ db.sqlite3
 .env
 
 # Virtual Env
-myenv/
+../myenv/
 
 # Ignore pipenv files
 Pipfile

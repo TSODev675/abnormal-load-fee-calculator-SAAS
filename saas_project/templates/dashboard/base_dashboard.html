@@ -1,90 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Abnormal Load Permit System{% endblock %}</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
-    <title>{% block title %}Abnormal Load Permit System{% endblock %}</title>
+    <script src="https://unpkg.com/@barba/core"></script>
+
     <style>
-        /* Ensure that the body and html take the full height */
-        html, body {
+        /* Ensure full height layout */
+        html,
+        body {
             height: 100%;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
-        /* Set height and scrolling behavior for the wrapper */
-        .flex-grow {
-            flex-grow: 1;
-            overflow: hidden; /* Prevent main body from scrolling */
-        }
-
-        /* Sidebar and Main Content Structure */
+        /* Wrapper Structure */
         #wrapper {
             display: flex;
-            height: calc(100vh - 64px); /* Full height minus the navbar height */
+            height: calc(100vh - 64px);
+            /* Full height minus navbar */
             overflow: hidden;
         }
 
-        /* Sidebar styles */
+        /* Sidebar Styling */
         #sidebar {
-            width: 16rem; /* Expanded width */
-            height: calc(100vh - 64px); /* Full height minus the navbar height */
-            overflow-y: auto; /* Enable scrolling for sidebar */
+            width: 16rem;
+            /* Default width */
+            min-width: 16rem;
+            height: 100vh;
+            overflow-y: auto;
+            /* Enable scrolling */
+            transition: all 0.3s ease-in-out;
         }
 
-        /* Main content area styles */
+        /* Adjust main content padding */
         #main-content {
             flex-grow: 1;
-            height: calc(100vh - 64px); /* Adjust height for content */
-            overflow-y: auto; /* Enable vertical scrolling for content */
             padding: 1rem;
-            margin-left: 16rem; /* Adjust based on the sidebar's width */
+            overflow-y: auto;
+            transition: margin-left 0.3s ease-in-out;
         }
 
-        /* Sidebar toggle styles */
-        .w-16 {
+        /* Sidebar collapsed state for mobile */
+        .sidebar-collapsed {
             width: 4rem !important;
         }
 
-        .ml-16 {
+        .main-collapsed {
             margin-left: 4rem !important;
         }
 
-        .ml-64 {
-            margin-left: 16rem !important;
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            #sidebar {
+                position: absolute;
+                left: -16rem;
+                top: 0;
+                height: 100vh;
+                z-index: 100;
+                background: #1a202c;
+                /* Dark background */
+            }
+
+            .sidebar-open {
+                left: 0 !important;
+            }
+
+            #main-content {
+                margin-left: 0 !important;
+            }
         }
     </style>
 </head>
+
 <body class="bg-gray-100 flex flex-col min-h-screen">
+
     <!-- Navbar -->
-    <nav class="bg-gray-900 text-white px-4 py-3">
-        <div class="flex justify-between items-center">
-            <div>
-                <a href="/" class="text-2xl font-bold">Abnormal Loads</a>
-            </div>
-            <!-- User Login and Icon -->
-            <div class="flex items-center space-x-4">
-                <span>Welcome, User</span>
-                <a href="{% url 'profile' %}">
-                    <i class="fas fa-user-circle text-2xl"></i>
-                </a>
-            </div>
+    <nav class="bg-gray-900 text-white px-4 py-3 flex justify-between items-center">
+        <button id="mobile-sidebar-toggle" class="md:hidden text-white">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+        <a href="/" class="text-2xl font-bold">Abnormal Loads</a>
+        <div class="flex items-center space-x-4">
+            <span>Welcome, User</span>
+            <a href="{% url 'profile' %}">
+                <i class="fas fa-user-circle text-2xl"></i>
+            </a>
         </div>
     </nav>
 
     <!-- Sidebar and Content Wrapper -->
     <div id="wrapper">
         <!-- Sidebar -->
-        <div id="sidebar" class="bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
-            <!-- Sidebar Header with Toggle Button -->
+        <div id="sidebar"
+            class="bg-gray-900 text-white flex-shrink-0 transition-all duration-300 ease-in-out flex flex-col justify-between">
             <div>
                 <div class="flex justify-between items-center p-4">
                     <span id="sidebar-title" class="text-2xl font-bold">Menu</span>
-                    <button id="sidebar-toggle" class="focus:outline-none">
+                    <button id="sidebar-toggle" class="hidden md:block focus:outline-none">
                         <i class="fas fa-bars"></i>
                     </button>
                 </div>
@@ -103,35 +124,36 @@
                         </a>
                     </li>
                     <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="{% url 'account' %}" class="flex items-center space-x-4">
+                            <i class="fas fa-user-circle"></i>
+                            <span class="sidebar-text">Account</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="{% url 'av-number' %}" class="flex items-center space-x-4">
+                            <i class="fas fa-list-alt"></i>
+                            <span class="sidebar-text">List of AV's</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
+                        <a href="{% url 'constants' %}" class="flex items-center space-x-4">
+                            <i class="fas fa-cogs"></i>
+                            <span class="sidebar-text">Update Constants</span>
+                        </a>
+                    </li>
+                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
                         <a href="{% url 'profile' %}" class="flex items-center space-x-4">
                             <i class="fas fa-user"></i>
                             <span class="sidebar-text">Profile</span>
                         </a>
                     </li>
-                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
-                        <a href="/av-number" class="flex items-center space-x-4">
-                            <i class="fas fa-list-alt"></i>
-                            <span class="sidebar-text">Abnormal Vehicles</span>
-                        </a>
-                    </li>
-                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
-                        <a href="/account" class="flex items-center space-x-4">
-                            <i class="fas fa-credit-card"></i>
-                            <span class="sidebar-text">Account</span>
-                        </a>
-                    </li>
-                    <li class="hover:bg-gray-700 rounded-md px-2 py-2">
-                        <a href="/constants" class="flex items-center space-x-4">
-                            <i class="fas fa-cogs"></i>
-                            <span class="sidebar-text">Constants & Fees</span>
-                        </a>
-                    </li>
                 </ul>
             </div>
 
-            <!-- Sidebar Logout Button (Stick to Bottom) -->
+            <!-- Sidebar Logout Button -->
             <div class="px-2 py-4 mb-16">
-                <button onclick="logoutUser()" class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
+                <button onclick="logoutUser()"
+                    class="w-full flex items-center justify-center hover:bg-red-600 bg-red-500 py-2 rounded-md">
                     <i class="fas fa-sign-out-alt"></i>
                     <span class="ml-2 sidebar-text">Logout</span>
                 </button>
@@ -140,57 +162,79 @@
 
         <!-- Main content area -->
         <div id="main-content">
-            {% block content %}
-            <!-- Page-specific content will go here -->
-            {% endblock %}
+            <div data-barba="wrapper">
+                <main data-barba="container" data-barba-namespace="dashboard">
+                    {% block content %}
+                    <!-- Page-specific content -->
+                    {% endblock %}
+                </main>
+            </div>
         </div>
     </div>
 
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-4 text-center w-full z-10">
-        <div class="flex justify-between items-center max-w-6xl mx-auto px-4">
-            <div class="text-sm">Abnormal Load System. All Rights Reserved.</div>
-            <div>
-                <img src="{% static 'images/Final_logo_white.png' %}" alt="CSIR Logo" class="h-8">
-            </div>
-        </div>
+        <p class="text-sm">Abnormal Load System. All Rights Reserved.</p>
     </footer>
 
-    <!-- Sidebar Toggle Script -->
+    <!-- JavaScript for Sidebar and Barba.js Transitions -->
     <script>
         const sidebarToggleBtn = document.getElementById('sidebar-toggle');
+        const mobileSidebarToggleBtn = document.getElementById('mobile-sidebar-toggle');
         const sidebar = document.getElementById('sidebar');
-        const sidebarTextElements = document.querySelectorAll('.sidebar-text');
-        const sidebarTitle = document.getElementById('sidebar-title');
         const mainContent = document.getElementById('main-content');
 
-        sidebarToggleBtn.addEventListener('click', function () {
-            sidebar.classList.toggle('w-16');
-            mainContent.classList.toggle('ml-16');
-            sidebar.classList.toggle('w-64');
-            mainContent.classList.toggle('ml-64');
-
-            sidebarTextElements.forEach(text => {
-                text.classList.toggle('hidden');
-            });
-            sidebarTitle.classList.toggle('hidden');
+        sidebarToggleBtn?.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar-collapsed');
+            mainContent.classList.toggle('main-collapsed');
         });
 
+        mobileSidebarToggleBtn?.addEventListener('click', function () {
+            sidebar.classList.toggle('sidebar-open');
+        });
+
+        function applyBackgroundAnimation() {
+            document.body.style.background = "linear-gradient(135deg, #1a1a2e, #16213e, #0f3460)";
+            document.body.style.backgroundSize = "400% 400%";
+            document.body.style.animation = "gradientBG 12s infinite alternate ease-in-out";
+        }
+
+
         function logoutUser() {
-        fetch("{% url 'logout' %}", { 
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-            }
-        }).then(response => {
-            if (response.ok) {
-                window.location.href = "/"; // Redirect to index page
-            }
-        }).catch(error => console.error("Logout failed:", error));
-    }
+            fetch("{% url 'logout' %}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": "{{ csrf_token }}"
+                }
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = "/"; // Redirect to home
+                }
+            }).catch(error => console.error("Logout failed:", error));
+        }
+
+        barba.init({
+            transitions: [{
+                name: "fade",
+                leave(data) {
+                    return gsap.to(data.current.container, {
+                        opacity: 0,
+                        duration: 0.6
+                    });
+                },
+                enter(data) {
+                    return gsap.from(data.next.container, {
+                        opacity: 0,
+                        duration: 0.6
+                    });
+                }
+            }],
+
+        });
     </script>
 
     <script src="{% static 'js/main.js' %}"></script>
 </body>
+
 </html>

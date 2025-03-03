@@ -73,7 +73,8 @@
         <h2 class="text-4xl font-bold mb-12">Features</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 animate-slide-in">
             {% for feature in features %}
-            <div class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
+            <div 
+                class="bg-white p-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-300 ease-in-out cursor-pointer"
                 onclick="openFeaturePopup('{{ feature.title }}', '{{ feature.description }}')">
                 <i class="{{ feature.icon }} text-blue-600 text-4xl mb-4"></i>
                 <h3 class="text-2xl font-semibold mb-2">{{ feature.title }}</h3>
@@ -88,13 +89,9 @@
 <div id="featurePopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
     <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-center">
         <h2 id="featureTitle" class="text-2xl font-bold mb-4"></h2>
-        <p id="featureDescription" class="text-gray-600 mb-4"></p>
-        <audio id="ttsAudio" controls class="mx-auto mb-4 hidden"></audio>
+        <p id="featureDescription" class="text-gray-600"></p>
         <div class="mt-6">
-            <button onclick="playTTS()" class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600">🔊 Play
-                Voice</button>
-            <button onclick="closeFeaturePopup()"
-                class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 ml-2">Close</button>
+            <button onclick="closeFeaturePopup()" class="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600">Close</button>
         </div>
     </div>
 </div>
